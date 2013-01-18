@@ -1608,14 +1608,14 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 /* method: get_mnt_path */
 static int sysfs__get_mnt_path__func(lua_State *L) {
   char * mnt_path = NULL;
-char path[PATH_MAX];
+  char path[PATH_MAX];
 
-if (sysfs_get_mnt_path(path, PATH_MAX)) {
+  if (sysfs_get_mnt_path(path, PATH_MAX)) {
 	lua_pushnil(L);
 	return 1;
-} else {
+  } else {
 	mnt_path = path;
-}
+  }
 
   lua_pushstring(L, mnt_path);
   return 1;

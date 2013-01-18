@@ -25,13 +25,13 @@
 c_function "get_mnt_path" {
 	var_out { "char *", "mnt_path" },
 	c_source[[
-char path[PATH_MAX];
+  char path[PATH_MAX];
 
-if (sysfs_get_mnt_path(path, PATH_MAX)) {
+  if (sysfs_get_mnt_path(path, PATH_MAX)) {
 	lua_pushnil(L);
 	return 1;
-} else {
+  } else {
 	${mnt_path} = path;
-}
+  }
 ]],
 }
