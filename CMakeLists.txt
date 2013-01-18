@@ -42,7 +42,7 @@ set(LUA_SYSFS_SRC
 )
 
 if(${USE_PRE_GENERATED_BINDINGS})
-	set(LUA_SYSFS_SRC src/pre_generated-sysfs.nobj.c)
+	set(LUA_SYSFS_SRC src/sysfs.nobj.pre_generated.c)
 else()
 	# Generate Lua bindings.
 	GenLuaNativeObjects(LUA_SYSFS_SRC)

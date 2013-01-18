@@ -3,21 +3,21 @@
 package	= 'lua-sysfs'
 version	= 'scm-0'
 source	= {
-	url	= '__project_git_url__'
+	url	= 'https://github.com/morfoh/lua-sysfs'
 }
 description	= {
-	summary	= "LuaNativeObjects project template.",
+	summary	= "Lua bindings for libsysfs.",
 	detailed	= '',
-	homepage	= '__project_homepage__',
+	homepage	= 'https://github.com/morfoh/lua-sysfs',
 	license	= 'MIT',
-	maintainer = "christian wiese",
+	maintainer = "Christian Wiese",
 }
 dependencies = {
 	'lua >= 5.1',
 }
 external_dependencies = {
 	SYSFS = {
-		header = "sysfs.h",
+		header = "sysfs/libsysfs.h",
 		library = "sysfs",
 	}
 }
@@ -25,7 +25,7 @@ build	= {
 	type = "builtin",
 	modules = {
 		sysfs = {
-			sources = { "src/pre_generated-sysfs.nobj.c" },
+			sources = { "src/sysfs.nobj.pre_generated.c" },
 			libraries = { "sysfs" },
 		}
 	}
