@@ -19,6 +19,16 @@
 -- THE SOFTWARE.
 
 --
+-- typedefs
+--
+local typedefs = [[
+typedef struct sysfs_class class;
+]]
+c_source "typedefs" (typedefs)
+-- pass extra C type info to FFI.
+ffi_cdef (typedefs)
+
+--
 -- Functions
 --
 
@@ -34,4 +44,21 @@ c_function "get_mnt_path" {
 	${mnt_path} = path;
   }
 ]],
+}
+
+--
+-- sysfs class
+--
+
+object "class" {
+
+	-- open
+	constructor "open" {
+		c_call "class *" "sysfs_open_class" { "const char *", "name" }
+	},
+
+	-- close
+	destructor "close" {
+		c_method_call "void" "sysfs_close_class" {}
+	},
 }

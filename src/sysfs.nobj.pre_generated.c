@@ -225,11 +225,16 @@ typedef struct ffi_export_symbol {
 } ffi_export_symbol;
 #endif
 
+typedef struct sysfs_class class;
+
 
 
 
 
 static obj_type obj_types[] = {
+#define obj_type_id_class 0
+#define obj_type_class (obj_types[obj_type_id_class])
+  { NULL, 0, OBJ_TYPE_FLAG_WEAK_REF, "class" },
   {NULL, -1, 0, NULL},
 };
 
@@ -1296,6 +1301,15 @@ static char *obj_interfaces[] = {
 
 
 
+#define obj_type_class_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_class))
+#define obj_type_class_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_class))
+#define obj_type_class_delete(L, _index, flags) \
+	obj_udata_luadelete_weak(L, _index, &(obj_type_class), flags)
+#define obj_type_class_push(L, obj, flags) \
+	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_class), flags)
+
 
 
 
@@ -1469,10 +1483,17 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "]])\n"
 "\n"
 "ffi.cdef[[\n"
+"typedef struct class class;\n"
 "\n"
 "]]\n"
 "\n"
 "ffi.cdef[[\n"
+"typedef struct sysfs_class class;\n"
+"\n"
+"class * sysfs_open_class(const char *);\n"
+"\n"
+"void sysfs_close_class(class *);\n"
+"\n"
 "\n"
 "]]\n"
 "\n"
@@ -1595,6 +1616,64 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "end\n"
 "\n"
 "\n"
+"local obj_type_class_check\n"
+"local obj_type_class_delete\n"
+"local obj_type_class_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"class\", \"class *\")\n"
+"\n"
+"	function obj_type_class_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.class[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'class *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_class_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_class_push(ptr, flags)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		-- check weak refs\n"
+"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		nobj_weak_objects[id] = ptr\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"class: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_class_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_class_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_class_check\n"
+"	obj_mt.ffi_check = obj_type_class_check\n"
+"end\n"
+"\n"
+"\n"
 "local obj_type_MutableBuffer_check =\n"
 "	obj_get_interface_check(\"MutableBufferIF\", \"Expected object with MutableBuffer interface\")\n"
 "\n"
@@ -1602,6 +1681,31 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "	obj_get_interface_check(\"BufferIF\", \"Expected object with Buffer interface\")\n"
 "\n"
 "C = ffi_load(\"sysfs\",false)\n"
+"\n"
+"\n"
+"-- Start \"class\" FFI interface\n"
+"-- method: open\n"
+"function _pub.class.open(name)\n"
+"  local name_len = #name\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
+"  local self\n"
+"  self = C.sysfs_open_class(name)\n"
+"  return obj_type_class_push(self, this_flags)\n"
+"end\n"
+"register_default_constructor(_pub,\"class\",_pub.class.open)\n"
+"\n"
+"-- method: close\n"
+"function _meth.class.close(self)\n"
+"  local self,this_flags = obj_type_class_delete(self)\n"
+"  if not self then return end\n"
+"  C.sysfs_close_class(self)\n"
+"  return \n"
+"end\n"
+"_priv.class.__gc = _meth.class.close\n"
+"\n"
+"_push.class = obj_type_class_push\n"
+"ffi.metatype(\"class\", _priv.class)\n"
+"-- End \"class\" FFI interface\n"
 "\n", NULL };
 
 
@@ -1621,7 +1725,62 @@ static int sysfs__get_mnt_path__func(lua_State *L) {
   return 1;
 }
 
+/* method: open */
+static int class__open__meth(lua_State *L) {
+  size_t name_len;
+  const char * name;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  class * this;
+  name = luaL_checklstring(L,1,&(name_len));
+  this = sysfs_open_class(name);
+  obj_type_class_push(L, this, this_flags);
+  return 1;
+}
 
+/* method: close */
+static int class__close__meth(lua_State *L) {
+  int this_flags = 0;
+  class * this;
+  this = obj_type_class_delete(L,1,&(this_flags));
+  if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
+  sysfs_close_class(this);
+  return 0;
+}
+
+
+
+static const luaL_reg obj_class_pub_funcs[] = {
+  {"open", class__open__meth},
+  {NULL, NULL}
+};
+
+static const luaL_reg obj_class_methods[] = {
+  {"close", class__close__meth},
+  {NULL, NULL}
+};
+
+static const luaL_reg obj_class_metas[] = {
+  {"__gc", class__close__meth},
+  {"__tostring", obj_udata_default_tostring},
+  {"__eq", obj_udata_default_equal},
+  {NULL, NULL}
+};
+
+static const obj_base obj_class_bases[] = {
+  {-1, NULL}
+};
+
+static const obj_field obj_class_fields[] = {
+  {NULL, 0, 0, 0}
+};
+
+static const obj_const obj_class_constants[] = {
+  {NULL, NULL, 0.0 , 0}
+};
+
+static const reg_impl obj_class_implements[] = {
+  {NULL, NULL}
+};
 
 static const luaL_reg sysfs_function[] = {
   {"get_mnt_path", sysfs__get_mnt_path__func},
@@ -1635,6 +1794,7 @@ static const obj_const sysfs_constants[] = {
 
 
 static const reg_sub_module reg_sub_modules[] = {
+  { &(obj_type_class), REG_OBJECT, obj_class_pub_funcs, obj_class_methods, obj_class_metas, obj_class_bases, obj_class_fields, obj_class_constants, obj_class_implements, 0},
   {NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0}
 };
 
