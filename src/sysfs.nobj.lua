@@ -23,6 +23,7 @@
 --
 local typedefs = [[
 typedef struct sysfs_class class;
+typedef struct dlist dlist;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
@@ -47,6 +48,13 @@ c_function "get_mnt_path" {
 }
 
 --
+-- dlist
+--
+
+object "dlist" {
+}
+
+--
 -- sysfs class
 --
 
@@ -60,5 +68,10 @@ object "class" {
 	-- close
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class" {}
+	},
+
+	-- get a list of devices
+	method "get_devices" {
+		c_method_call "dlist *" "sysfs_get_class_devices" {}
 	},
 }
