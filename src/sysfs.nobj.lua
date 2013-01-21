@@ -55,6 +55,50 @@ c_function "get_mnt_path" {
 object "dlist" {
 }
 
+
+--
+-- class device
+--
+
+object "class_device" {
+
+	-- open
+	constructor "open" {
+		c_call "class_device *" "sysfs_open_class_device" {
+						"const char *", "classname",
+						"const char *", "name"
+		}
+	},
+
+	-- open path
+	constructor "open_path" {
+		c_call "class_device *" "sysfs_open_class_device_path" {
+						"const char *", "path"
+		}
+	},
+
+	-- get class device parent
+	constructor "get_parent" {
+		c_call "class_device *" "sysfs_get_classdev_parent" {
+						"class_device *", "clsdev"
+		}
+	},
+
+	-- get class device
+	constructor "get" {
+		c_call "class_device *" "sysfs_get_class_device" {
+						"class *", "class",
+						"const char *", "name"
+		}
+	},
+
+	-- close
+	destructor "close" {
+		c_method_call "void" "sysfs_close_class_device" {}
+	},
+}
+
+
 --
 -- sysfs class
 --
