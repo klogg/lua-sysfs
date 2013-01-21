@@ -23,6 +23,7 @@
 --
 local typedefs = [[
 typedef struct sysfs_class class;
+typedef struct sysfs_class_device class_device;
 typedef struct dlist dlist;
 ]]
 c_source "typedefs" (typedefs)
@@ -58,6 +59,7 @@ object "dlist" {
 -- sysfs class
 --
 
+
 object "class" {
 
 	-- open
@@ -73,5 +75,37 @@ object "class" {
 	-- get a list of devices
 	method "get_devices" {
 		c_method_call "dlist *" "sysfs_get_class_devices" {}
+	},
+
+c_source {
+[[
+
+static int class_device_iter (lua_State *L) {
+	struct dlist *clsdevlist = *(struct dlist **) lua_touserdata(L, lua_upvalueindex(1));
+	struct sysfs_class_device *device;
+
+	if ((device = dlist_next(clsdevlist)) != NULL) {
+		lua_pushlightuserdata(L, device);
+		return 1;
+	} else {
+		return 0;
+	}
+}
+]]
+},
+
+	-- get a list of devices
+	method "for_each_device" {
+		c_source[[
+  struct dlist **clsdevlist = (struct dlist **) lua_newuserdata(L, sizeof(struct dlist *));
+
+  *clsdevlist = sysfs_get_class_devices(${this});
+
+  if (clsdevlist) {
+		dlist_start(*clsdevlist);
+		lua_pushcclosure(L, class_device_iter, 1);
+		return 1;
+  } 
+		]],
 	},
 }
