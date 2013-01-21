@@ -85,7 +85,9 @@ static int class_device_iter (lua_State *L) {
 	struct sysfs_class_device *device;
 
 	if ((device = dlist_next(clsdevlist)) != NULL) {
-		lua_pushlightuserdata(L, device);
+		class_device *d = (class_device *) lua_newuserdata(L, sizeof(class_device));
+		d = device;
+		/* new userdata is already on the stack */
 		return 1;
 	} else {
 		return 0;
