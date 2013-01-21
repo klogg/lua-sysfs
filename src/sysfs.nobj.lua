@@ -117,6 +117,18 @@ object "class_device" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class_device" {}
 	},
+
+	-- get attribute
+	method "get_attribute" {
+		c_method_call "attribute *" "sysfs_get_classdev_attr" {
+						"const char *", "name"
+		}
+	},
+
+	-- get attributes
+	method "get_attributes" {
+		c_method_call "dlist *" "sysfs_get_classdev_attributes" {}
+	},
 }
 
 
