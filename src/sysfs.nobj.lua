@@ -23,6 +23,7 @@
 --
 local typedefs = [[
 typedef struct sysfs_attribute attribute;
+typedef struct sysfs_device device;
 typedef struct sysfs_class class;
 typedef struct sysfs_class_device class_device;
 typedef struct dlist dlist;
@@ -73,6 +74,56 @@ object "attribute" {
 	-- close
 	destructor "close" {
 		c_method_call "void" "sysfs_close_attribute" {}
+	},
+}
+
+
+--
+-- device
+--
+
+object "device" {
+
+	-- open
+	constructor "open" {
+		c_call "device *" "sysfs_open_device" {
+						"const char *", "bus",
+						"const char *", "bus_id"
+		}
+	},
+
+	-- close
+	destructor "close" {
+		c_method_call "void" "sysfs_close_device" {}
+	},
+
+	-- open tree
+	constructor "open_tree" {
+		c_call "device *" "sysfs_open_device_tree" {
+						"const char *", "path",
+		}
+	},
+
+	-- close tree
+	destructor "close_tree" {
+		c_method_call "void" "sysfs_close_device_tree" {}
+	},
+
+	-- open path
+	constructor "open_path" {
+		c_call "device *" "sysfs_open_device_path" {
+						"const char *", "path",
+		}
+	},
+
+	-- get parent device
+	method "get_parent" {
+		c_method_call "device *" "sysfs_get_device_parent" {}
+	},
+
+	-- get bus
+	method "get_bus" {
+		c_method_call "int" "sysfs_get_device_bus" {}
 	},
 }
 
