@@ -22,6 +22,7 @@
 -- typedefs
 --
 local typedefs = [[
+typedef struct sysfs_attribute attribute;
 typedef struct sysfs_class class;
 typedef struct sysfs_class_device class_device;
 typedef struct dlist dlist;
@@ -53,6 +54,26 @@ c_function "get_mnt_path" {
 --
 
 object "dlist" {
+}
+
+
+--
+-- attribute
+--
+
+object "attribute" {
+
+	-- open
+	constructor "open" {
+		c_call "attribute *" "sysfs_open_attribute" {
+						"const char *", "path",
+		}
+	},
+
+	-- close
+	destructor "close" {
+		c_method_call "void" "sysfs_close_attribute" {}
+	},
 }
 
 
