@@ -185,6 +185,14 @@ object "class_device" {
 		]]
 	},
 
+	-- get classname
+	method "get_classname" {
+		c_source[[
+  lua_pushstring(L, ${this}->classname);
+  return 1;
+		]]
+	},
+
 	-- get attribute
 	method "get_attribute" {
 		c_method_call "attribute *" "sysfs_get_classdev_attr" {
