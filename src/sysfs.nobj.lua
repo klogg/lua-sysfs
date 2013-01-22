@@ -169,6 +169,14 @@ object "class_device" {
 		c_method_call "void" "sysfs_close_class_device" {}
 	},
 
+	-- get name
+	method "get_name" {
+		c_source[[
+  lua_pushstring(L, ${this}->name);
+  return 1;
+		]]
+	},
+
 	-- get attribute
 	method "get_attribute" {
 		c_method_call "attribute *" "sysfs_get_classdev_attr" {
