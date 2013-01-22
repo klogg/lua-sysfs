@@ -235,7 +235,12 @@ c_source {
 static int class_device_iter (lua_State *L) {
 	struct dlist *clsdevlist = *(struct dlist **) lua_touserdata(L, lua_upvalueindex(1));
 	struct sysfs_class_device *obj;
-	int obj_flags = OBJ_UDATA_FLAG_LOOKUP;
+
+	/* TODO: clarify the flag types
+	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
+	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
+	 */
+	int obj_flags = 0;
 
 	if ((obj = dlist_next(clsdevlist)) != NULL) {
 		obj_type_class_device_push(L, obj, obj_flags);
