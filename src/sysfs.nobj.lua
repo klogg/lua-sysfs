@@ -210,12 +210,11 @@ c_source {
 
 static int class_device_iter (lua_State *L) {
 	struct dlist *clsdevlist = *(struct dlist **) lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_class_device *device;
+	struct sysfs_class_device *obj;
+	int obj_flags = OBJ_UDATA_FLAG_LOOKUP;
 
-	if ((device = dlist_next(clsdevlist)) != NULL) {
-		class_device *d = (class_device *) lua_newuserdata(L, sizeof(class_device));
-		d = device;
-		/* new userdata is already on the stack */
+	if ((obj = dlist_next(clsdevlist)) != NULL) {
+		obj_type_class_device_push(L, obj, obj_flags);
 		return 1;
 	} else {
 		return 0;
