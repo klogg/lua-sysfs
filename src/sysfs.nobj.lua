@@ -36,7 +36,6 @@ ffi_cdef (typedefs)
 --
 -- Functions
 --
-
 c_function "get_mnt_path" {
 	var_out { "char *", "mnt_path" },
 	c_source[[
@@ -54,7 +53,6 @@ c_function "get_mnt_path" {
 --
 -- dlist
 --
-
 object "dlist" {
 }
 
@@ -62,16 +60,13 @@ object "dlist" {
 --
 -- attribute
 --
-
 object "attribute" {
-
 	-- open
 	constructor "open" {
 		c_call "attribute *" "sysfs_open_attribute" {
 						"const char *", "path",
 		}
 	},
-
 	-- close
 	destructor "close" {
 		c_method_call "void" "sysfs_close_attribute" {}
@@ -82,7 +77,6 @@ object "attribute" {
 --
 -- device
 --
-
 object "device" {
 	c_source {
 	[[
@@ -107,7 +101,6 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 }
 	]]
 },
-
 	-- open
 	constructor "open" {
 		c_call "device *" "sysfs_open_device" {
@@ -115,36 +108,30 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 						"const char *", "bus_id"
 		}
 	},
-
 	-- close
 	destructor "close" {
 		c_method_call "void" "sysfs_close_device" {}
 	},
-
 	-- open tree
 	constructor "open_tree" {
 		c_call "device *" "sysfs_open_device_tree" {
 						"const char *", "path",
 		}
 	},
-
 	-- close tree
 	destructor "close_tree" {
 		c_method_call "void" "sysfs_close_device_tree" {}
 	},
-
 	-- open path
 	constructor "open_path" {
 		c_call "device *" "sysfs_open_device_path" {
 						"const char *", "path",
 		}
 	},
-
 	-- get parent device
 	method "get_parent" {
 		c_method_call "device *" "sysfs_get_device_parent" {}
 	},
-
 	-- get bus
 	method "get_bus" {
 		c_method_call "int" "sysfs_get_device_bus" {}
@@ -155,9 +142,7 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 --
 -- class device
 --
-
 object "class_device" {
-
 	-- open
 	constructor "open" {
 		c_call "class_device *" "sysfs_open_class_device" {
@@ -165,21 +150,18 @@ object "class_device" {
 						"const char *", "name"
 		}
 	},
-
 	-- open path
 	constructor "open_path" {
 		c_call "class_device *" "sysfs_open_class_device_path" {
 						"const char *", "path"
 		}
 	},
-
 	-- get class device parent
 	constructor "get_parent" {
 		c_call "class_device *" "sysfs_get_classdev_parent" {
 						"class_device *", "clsdev"
 		}
 	},
-
 	-- get class device
 	constructor "get" {
 		c_call "class_device *" "sysfs_get_class_device" {
@@ -187,12 +169,10 @@ object "class_device" {
 						"const char *", "name"
 		}
 	},
-
 	-- close
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class_device" {}
 	},
-
 	-- get name
 	method "get_name" {
 		c_source[[
@@ -200,7 +180,6 @@ object "class_device" {
   return 1;
 		]]
 	},
-
 	-- get path
 	method "get_path" {
 		c_source[[
@@ -208,7 +187,6 @@ object "class_device" {
   return 1;
 		]]
 	},
-
 	-- get classname
 	method "get_classname" {
 		c_source[[
@@ -216,14 +194,12 @@ object "class_device" {
   return 1;
 		]]
 	},
-
 	-- get attribute
 	method "get_attribute" {
 		c_method_call "attribute *" "sysfs_get_classdev_attr" {
 						"const char *", "name"
 		}
 	},
-
 	-- get attributes
 	method "get_attributes" {
 		c_method_call "dlist *" "sysfs_get_classdev_attributes" {}
@@ -234,20 +210,15 @@ object "class_device" {
 --
 -- sysfs class
 --
-
-
 object "class" {
-
 	-- open
 	constructor "open" {
 		c_call "class *" "sysfs_open_class" { "const char *", "name" }
 	},
-
 	-- close
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class" {}
 	},
-
 	-- get a list of devices
 	method "get_devices" {
 		c_method_call "dlist *" "sysfs_get_class_devices" {}
@@ -275,7 +246,6 @@ static int class_device_iter (lua_State *L) {
 }
 ]]
 },
-
 	-- get a list of devices
 	method "for_each_device" {
 		c_source[[
