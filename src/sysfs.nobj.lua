@@ -136,6 +136,13 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	method "get_bus" {
 		c_method_call "int" "sysfs_get_device_bus" {}
 	},
+	-- get name
+	method "get_name" {
+		c_source[[
+  lua_pushstring(L, ${this}->name);
+  return 1;
+		]]
+	},
 }
 
 
