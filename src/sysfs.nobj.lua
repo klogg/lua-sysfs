@@ -83,6 +83,29 @@ object "attribute" {
 --
 
 object "device" {
+	c_source {
+	[[
+
+/* internal sysfs device iterator function */
+static int lua_sysfs_device_iterator(lua_State *L) {
+	struct dlist *list = *(struct dlist **) lua_touserdata(L, lua_upvalueindex(1));
+	struct sysfs_device *obj;
+
+	/* TODO: clarify the flag types
+	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
+	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
+	 */
+	int obj_flags = 0;
+
+	if ((obj = dlist_next(list)) != NULL) {
+		obj_type_device_push(L, obj, obj_flags);
+		return 1;
+	} else {
+		return 0;
+	}
+}
+	]]
+},
 
 	-- open
 	constructor "open" {
