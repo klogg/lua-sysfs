@@ -302,7 +302,7 @@ static obj_type obj_types[] = {
   { NULL, 4, OBJ_TYPE_FLAG_WEAK_REF, "class" },
 #define obj_type_id_bus 5
 #define obj_type_bus (obj_types[obj_type_id_bus])
-  { NULL, 5, OBJ_TYPE_FLAG_WEAK_REF, "bus" },
+  { NULL, 5, OBJ_TYPE_SIMPLE, "bus" },
   {NULL, -1, 0, NULL},
 };
 
@@ -1421,13 +1421,13 @@ static char *obj_interfaces[] = {
 	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_class), flags)
 
 #define obj_type_bus_check(L, _index) \
-	obj_udata_luacheck(L, _index, &(obj_type_bus))
+	*((bus **)obj_simple_udata_luacheck(L, _index, &(obj_type_bus)))
 #define obj_type_bus_optional(L, _index) \
-	obj_udata_luaoptional(L, _index, &(obj_type_bus))
-#define obj_type_bus_delete(L, _index, flags) \
-	obj_udata_luadelete_weak(L, _index, &(obj_type_bus), flags)
-#define obj_type_bus_push(L, obj, flags) \
-	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_bus), flags)
+	*((bus **)obj_simple_udata_luaoptional(L, _index, &(obj_type_bus)))
+#define obj_type_bus_delete(L, _index) \
+	*((bus **)obj_simple_udata_luadelete(L, _index, &(obj_type_bus)))
+#define obj_type_bus_push(L, obj) \
+	obj_simple_udata_luapush(L, &(obj), sizeof(bus), &(obj_type_bus))
 
 
 
@@ -2079,52 +2079,49 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"bus\", \"bus *\")\n"
 "\n"
 "	function obj_type_bus_check(ptr)\n"
-"		-- if ptr is nil or is the correct type, then just return it.\n"
-"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
-"		-- check if it is a compatible type.\n"
-"		local ctype = tostring(ffi.typeof(ptr))\n"
-"		local bcaster = _obj_subs.bus[ctype]\n"
-"		if bcaster then\n"
-"			return bcaster(ptr)\n"
-"		end\n"
-"		return error(\"Expected 'bus *'\", 2)\n"
+"		return ptr\n"
 "	end\n"
 "\n"
 "	function obj_type_bus_delete(ptr)\n"
 "		local id = obj_ptr_to_id(ptr)\n"
 "		local flags = nobj_obj_flags[id]\n"
-"		if not flags then return nil, 0 end\n"
+"		if not flags then return ptr end\n"
 "		ffi.gc(ptr, nil)\n"
 "		nobj_obj_flags[id] = nil\n"
-"		return ptr, flags\n"
-"	end\n"
-"\n"
-"	function obj_type_bus_push(ptr, flags)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		-- check weak refs\n"
-"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
-"\n"
-"		if flags ~= 0 then\n"
-"			nobj_obj_flags[id] = flags\n"
-"			ffi.gc(ptr, obj_mt.__gc)\n"
-"		end\n"
-"		nobj_weak_objects[id] = ptr\n"
 "		return ptr\n"
 "	end\n"
 "\n"
+"	if obj_mt.__gc then\n"
+"		-- has __gc metamethod\n"
+"		function obj_type_bus_push(ptr)\n"
+"			local id = obj_ptr_to_id(ptr)\n"
+"			nobj_obj_flags[id] = true\n"
+"			return ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"	else\n"
+"		-- no __gc metamethod\n"
+"		function obj_type_bus_push(ptr)\n"
+"			return ptr\n"
+"		end\n"
+"	end\n"
+"\n"
 "	function obj_mt:__tostring()\n"
-"		return sformat(\"bus: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"		return sformat(\"bus: %p\", self)\n"
 "	end\n"
 "\n"
 "	-- type checking function for C API.\n"
-"	_priv[obj_type] = obj_type_bus_check\n"
+"	local function c_check(ptr)\n"
+"		if ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		return nil\n"
+"	end\n"
+"	_priv[obj_type] = c_check\n"
 "	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr, flags)\n"
-"		return obj_type_bus_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	reg_table[obj_type] = function(ptr)\n"
+"		return obj_type_bus_push(ffi.cast(obj_ctype, ptr)[0])\n"
 "	end\n"
 "\n"
 "	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = obj_type_bus_check\n"
+"	obj_mt.c_check = c_check\n"
 "	obj_mt.ffi_check = obj_type_bus_check\n"
 "end\n"
 "\n"
@@ -2346,16 +2343,15 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "-- method: open\n"
 "function _pub.bus.open(name)\n"
 "  local name_len = #name\n"
-"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_bus(name)\n"
-"  return obj_type_bus_push(self, this_flags)\n"
+"  return obj_type_bus_push(self)\n"
 "end\n"
 "register_default_constructor(_pub,\"bus\",_pub.bus.open)\n"
 "\n"
 "-- method: close\n"
 "function _meth.bus.close(self)\n"
-"  local self,this_flags = obj_type_bus_delete(self)\n"
+"  local self = obj_type_bus_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_bus(self)\n"
 "  return \n"
@@ -2363,7 +2359,7 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "_priv.bus.__gc = _meth.bus.close\n"
 "\n"
 "_push.bus = obj_type_bus_push\n"
-"ffi.metatype(\"bus\", _priv.bus)\n"
+"ffi.metatype(\"bus_t\", _priv.bus)\n"
 "-- End \"bus\" FFI interface\n"
 "\n", NULL };
 
@@ -2703,20 +2699,17 @@ static int class__for_each_device__meth(lua_State *L) {
 static int bus__open__meth(lua_State *L) {
   size_t name_len;
   const char * name;
-  int this_flags = OBJ_UDATA_FLAG_OWN;
   bus * this;
   name = luaL_checklstring(L,1,&(name_len));
   this = sysfs_open_bus(name);
-  obj_type_bus_push(L, this, this_flags);
+  obj_type_bus_push(L, this);
   return 1;
 }
 
 /* method: close */
 static int bus__close__meth(lua_State *L) {
-  int this_flags = 0;
   bus * this;
-  this = obj_type_bus_delete(L,1,&(this_flags));
-  if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
+  this = obj_type_bus_delete(L,1);
   sysfs_close_bus(this);
   return 0;
 }
@@ -2933,8 +2926,8 @@ static const luaL_Reg obj_bus_methods[] = {
 
 static const luaL_Reg obj_bus_metas[] = {
   {"__gc", bus__close__meth},
-  {"__tostring", obj_udata_default_tostring},
-  {"__eq", obj_udata_default_equal},
+  {"__tostring", obj_simple_udata_default_tostring},
+  {"__eq", obj_simple_udata_default_equal},
   {NULL, NULL}
 };
 

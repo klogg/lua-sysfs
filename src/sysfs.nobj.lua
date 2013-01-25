@@ -275,6 +275,9 @@ static int class_device_iter (lua_State *L) {
 -- sysfs bus
 --
 object "bus" {
+
+	userdata_type = "simple ptr",
+
 	-- open bus
 	constructor "open" {
 		c_call "bus *" "sysfs_open_bus" { "const char *", "name" }
