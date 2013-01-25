@@ -83,7 +83,7 @@ object "device" {
 
 /* internal sysfs device iterator function */
 static int lua_sysfs_device_iterator(lua_State *L) {
-	struct dlist *list = *(struct dlist **) lua_touserdata(L, lua_upvalueindex(1));
+	struct dlist *list = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
 	struct sysfs_device *obj;
 
 	/* TODO: clarify the flag types
@@ -235,7 +235,7 @@ c_source {
 [[
 
 static int class_device_iter (lua_State *L) {
-	struct dlist *clsdevlist = *(struct dlist **) lua_touserdata(L, lua_upvalueindex(1));
+	struct dlist *clsdevlist = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
 	struct sysfs_class_device *obj;
 
 	/* TODO: clarify the flag types
@@ -256,12 +256,13 @@ static int class_device_iter (lua_State *L) {
 	-- get a list of devices
 	method "for_each_device" {
 		c_source[[
-  struct dlist **clsdevlist = (struct dlist **) lua_newuserdata(L, sizeof(struct dlist *));
+  struct dlist *clsdevlist;
 
-  *clsdevlist = sysfs_get_class_devices(${this});
+  clsdevlist = sysfs_get_class_devices(${this});
 
   if (clsdevlist) {
-		dlist_start(*clsdevlist);
+		dlist_start(clsdevlist);
+		lua_pushlightuserdata(L, clsdevlist);
 		lua_pushcclosure(L, class_device_iter, 1);
 		return 1;
   } 
@@ -285,12 +286,13 @@ object "bus" {
 	-- sysfs device iterator
 	method "for_each_device" {
 		c_source[[
-  struct dlist **list = (struct dlist **) lua_newuserdata(L, sizeof(struct dlist *));
+  struct dlist *list;
 
-  *list = sysfs_get_bus_devices(${this});
+  list = sysfs_get_bus_devices(${this});
 
   if (list) {
-		dlist_start(*list);
+		dlist_start(list);
+		lua_pushlightuserdata(L, list);
 		lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
 		return 1;
   }
