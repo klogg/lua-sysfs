@@ -13,6 +13,7 @@ sys_include "sysfs/libsysfs.h",
 
 subfiles {
 "src/sysfs.nobj.lua",
+"src/sysfs_bus.nobj.lua",
 "src/sysfs_driver.nobj.lua",
 },
 }

@@ -26,7 +26,6 @@ typedef struct sysfs_attribute attribute;
 typedef struct sysfs_device device;
 typedef struct sysfs_class class;
 typedef struct sysfs_class_device class_device;
-typedef struct sysfs_bus bus;
 typedef struct dlist dlist;
 ]]
 c_source "typedefs" (typedefs)
@@ -300,39 +299,6 @@ static int class_device_iter (lua_State *L) {
 		lua_pushcclosure(L, class_device_iter, 1);
 		return 1;
   } 
-		]],
-	},
-}
-
-
---
--- sysfs bus
---
-object "bus" {
-
-	userdata_type = "simple ptr",
-
-	-- open bus
-	constructor "open" {
-		c_call "bus *" "sysfs_open_bus" { "const char *", "name" }
-	},
-	-- close bus
-	destructor "close" {
-		c_method_call "void" "sysfs_close_bus" {}
-	},
-	-- sysfs device iterator
-	method "for_each_device" {
-		c_source[[
-  struct dlist *list;
-
-  list = sysfs_get_bus_devices(${this});
-
-  if (list) {
-		dlist_start(list);
-		lua_pushlightuserdata(L, list);
-		lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
-		return 1;
-  }
 		]],
 	},
 }
