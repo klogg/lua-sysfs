@@ -48,4 +48,21 @@ object "driver" {
 						"const char *", "path",
 		}
 	},
+	--
+	-- lua binding specific methods for accessing 'struct sysfs_driver' members
+	--
+	-- get name
+        method "get_name" {
+                c_source[[
+  lua_pushstring(L, ${this}->name);
+  return 1;
+                ]]
+        },
+	-- get path
+        method "get_path" {
+                c_source[[
+  lua_pushstring(L, ${this}->path);
+  return 1;
+                ]]
+        },
 }
