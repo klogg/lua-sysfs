@@ -136,10 +136,44 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	method "get_bus" {
 		c_method_call "int" "sysfs_get_device_bus" {}
 	},
+	--
+	-- lua binding specific methods for accessing 'struct sysfs_device' members
+	--
 	-- get name
 	method "get_name" {
 		c_source[[
   lua_pushstring(L, ${this}->name);
+  return 1;
+		]]
+	},
+	-- get path
+	method "get_path" {
+		c_source[[
+  lua_pushstring(L, ${this}->path);
+  return 1;
+		]]
+	},
+	-- get id
+	method "get_bus_id" {
+		c_source[[
+  lua_pushstring(L, ${this}->bus_id);
+  return 1;
+		]]
+	},
+	-- TODO: 'bus' field
+	-- ${this}->bus);
+
+	-- get driver_name
+	method "get_driver_name" {
+		c_source[[
+  lua_pushstring(L, ${this}->driver_name);
+  return 1;
+		]]
+	},
+	-- get subsystem
+	method "get_subsystem" {
+		c_source[[
+  lua_pushstring(L, ${this}->subsystem);
   return 1;
 		]]
 	},
