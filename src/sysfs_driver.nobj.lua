@@ -42,4 +42,10 @@ object "driver" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_driver" {}
 	},
+	-- open path
+	constructor "open_path" {
+		c_call "driver *" "sysfs_open_driver_path" {
+						"const char *", "path",
+		}
+	},
 }
