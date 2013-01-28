@@ -139,7 +139,7 @@ static int class_device_iter (lua_State *L) {
 ]]
 },
 	-- get a list of devices
-	method "for_each_device" {
+	method "get_class_devices" {
 		c_source[[
   struct dlist *clsdevlist;
 
