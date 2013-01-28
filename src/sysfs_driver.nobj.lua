@@ -31,6 +31,8 @@ c_source "typedefs" (typedefs)
 ffi_cdef (typedefs)
 
 object "driver" {
+	userdata_type = "simple ptr",
+
 	-- open
 	constructor "open" {
 		c_call "driver *" "sysfs_open_driver" {
