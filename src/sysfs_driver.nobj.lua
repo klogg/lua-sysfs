@@ -48,6 +48,19 @@ object "driver" {
 						"const char *", "path",
 		}
 	},
+	-- sysfs get devices iterator
+	method "get_devices" {
+	c_source[[
+  struct dlist *list = sysfs_get_driver_devices(${this});
+
+  if (list) {
+	dlist_start(list);
+	lua_pushlightuserdata(L, list);
+	lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
+	return 1;
+  }
+		]]
+        },
 	--
 	-- lua binding specific methods for accessing 'struct sysfs_driver' members
 	--
