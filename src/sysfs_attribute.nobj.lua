@@ -19,34 +19,29 @@
 -- THE SOFTWARE.
 
 --
--- typedefs
+-- attribute access
 --
+
+-- typedefs
 local typedefs = [[
-typedef struct dlist dlist;
+typedef struct sysfs_attribute attribute;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
 --
--- Functions
+-- attribute
 --
-c_function "get_mnt_path" {
-	var_out { "char *", "mnt_path" },
-	c_source[[
-  char path[PATH_MAX];
-
-  if (sysfs_get_mnt_path(path, PATH_MAX)) {
-	lua_pushnil(L);
-	return 1;
-  } else {
-	${mnt_path} = path;
-  }
-]],
-}
-
---
--- dlist
---
-object "dlist" {
+object "attribute" {
+	-- open
+	constructor "open" {
+		c_call "attribute *" "sysfs_open_attribute" {
+						"const char *", "path",
+		}
+	},
+	-- close
+	destructor "close" {
+		c_method_call "void" "sysfs_close_attribute" {}
+	},
 }
