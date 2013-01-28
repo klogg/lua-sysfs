@@ -43,7 +43,7 @@ object "bus" {
 		c_method_call "void" "sysfs_close_bus" {}
 	},
 	-- sysfs device iterator
-	method "for_each_device" {
+	method "get_devices" {
 		c_source[[
   struct dlist *list;
 
