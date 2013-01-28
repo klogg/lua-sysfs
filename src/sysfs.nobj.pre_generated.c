@@ -273,12 +273,18 @@ typedef struct ffi_export_symbol {
 } ffi_export_symbol;
 #endif
 
+typedef struct dlist dlist;
+
 typedef struct sysfs_attribute attribute;
+
 typedef struct sysfs_device device;
+
 typedef struct sysfs_class class;
 typedef struct sysfs_class_device class_device;
+
 typedef struct sysfs_bus bus;
-typedef struct dlist dlist;
+
+typedef struct sysfs_driver driver;
 
 
 
@@ -303,6 +309,9 @@ static obj_type obj_types[] = {
 #define obj_type_id_bus 5
 #define obj_type_bus (obj_types[obj_type_id_bus])
   { NULL, 5, OBJ_TYPE_SIMPLE, "bus" },
+#define obj_type_id_driver 6
+#define obj_type_driver (obj_types[obj_type_id_driver])
+  { NULL, 6, OBJ_TYPE_FLAG_WEAK_REF, "driver" },
   {NULL, -1, 0, NULL},
 };
 
@@ -1429,6 +1438,15 @@ static char *obj_interfaces[] = {
 #define obj_type_bus_push(L, obj) \
 	obj_simple_udata_luapush(L, &(obj), sizeof(bus), &(obj_type_bus))
 
+#define obj_type_driver_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_driver))
+#define obj_type_driver_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_driver))
+#define obj_type_driver_delete(L, _index, flags) \
+	obj_udata_luadelete_weak(L, _index, &(obj_type_driver), flags)
+#define obj_type_driver_push(L, obj, flags) \
+	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_driver), flags)
+
 
 
 
@@ -1607,20 +1625,20 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "typedef struct class_device class_device;\n"
 "typedef struct class class;\n"
 "typedef struct bus bus;\n"
+"typedef struct driver driver;\n"
 "\n"
 "]]\n"
 "\n"
 "ffi.cdef[[\n"
-"typedef struct sysfs_attribute attribute;\n"
-"typedef struct sysfs_device device;\n"
-"typedef struct sysfs_class class;\n"
-"typedef struct sysfs_class_device class_device;\n"
-"typedef struct sysfs_bus bus;\n"
 "typedef struct dlist dlist;\n"
+"\n"
+"typedef struct sysfs_attribute attribute;\n"
 "\n"
 "attribute * sysfs_open_attribute(const char *);\n"
 "\n"
 "void sysfs_close_attribute(attribute *);\n"
+"\n"
+"typedef struct sysfs_device device;\n"
 "\n"
 "device * sysfs_open_device(const char *, const char *);\n"
 "\n"
@@ -1635,6 +1653,9 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "device * sysfs_get_device_parent(device *);\n"
 "\n"
 "int sysfs_get_device_bus(device *);\n"
+"\n"
+"typedef struct sysfs_class class;\n"
+"typedef struct sysfs_class_device class_device;\n"
 "\n"
 "class_device * sysfs_open_class_device(const char *, const char *);\n"
 "\n"
@@ -1656,9 +1677,19 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "dlist * sysfs_get_class_devices(class *);\n"
 "\n"
+"typedef struct sysfs_bus bus;\n"
+"\n"
 "bus * sysfs_open_bus(const char *);\n"
 "\n"
 "void sysfs_close_bus(bus *);\n"
+"\n"
+"typedef struct sysfs_driver driver;\n"
+"\n"
+"driver * sysfs_open_driver(const char *, const char *);\n"
+"\n"
+"void sysfs_close_driver(driver *);\n"
+"\n"
+"driver * sysfs_open_driver_path(const char *);\n"
 "\n"
 "\n"
 "]]\n"
@@ -1970,7 +2001,7 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "		local bcaster = _obj_subs.class_device[ctype]\n"
 "		if bcaster then\n"
 "			return bcaster(ptr)\n"
-"		end\n"
+"		end\n", /* ----- CUT ----- */
 "		return error(\"Expected 'class_device *'\", 2)\n"
 "	end\n"
 "\n"
@@ -1979,7 +2010,7 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "		local flags = nobj_obj_flags[id]\n"
 "		if not flags then return nil, 0 end\n"
 "		ffi.gc(ptr, nil)\n"
-"		nobj_obj_flags[id] = nil\n", /* ----- CUT ----- */
+"		nobj_obj_flags[id] = nil\n"
 "		return ptr, flags\n"
 "	end\n"
 "\n"
@@ -2123,6 +2154,64 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "	-- export check functions for use in other modules.\n"
 "	obj_mt.c_check = c_check\n"
 "	obj_mt.ffi_check = obj_type_bus_check\n"
+"end\n"
+"\n"
+"\n"
+"local obj_type_driver_check\n"
+"local obj_type_driver_delete\n"
+"local obj_type_driver_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"driver\", \"driver *\")\n"
+"\n"
+"	function obj_type_driver_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.driver[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'driver *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_driver_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_driver_push(ptr, flags)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		-- check weak refs\n"
+"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		nobj_weak_objects[id] = ptr\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"driver: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_driver_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_driver_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_driver_check\n"
+"	obj_mt.ffi_check = obj_type_driver_check\n"
 "end\n"
 "\n"
 "\n"
@@ -2361,6 +2450,41 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "_push.bus = obj_type_bus_push\n"
 "ffi.metatype(\"bus_t\", _priv.bus)\n"
 "-- End \"bus\" FFI interface\n"
+"\n"
+"\n"
+"-- Start \"driver\" FFI interface\n"
+"-- method: open\n"
+"function _pub.driver.open(bus_name, drv_name)\n"
+"  local bus_name_len = #bus_name\n"
+"  local drv_name_len = #drv_name\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
+"  local self\n"
+"  self = C.sysfs_open_driver(bus_name, drv_name)\n"
+"  return obj_type_driver_push(self, this_flags)\n"
+"end\n"
+"register_default_constructor(_pub,\"driver\",_pub.driver.open)\n"
+"\n"
+"-- method: close\n"
+"function _meth.driver.close(self)\n"
+"  local self,this_flags = obj_type_driver_delete(self)\n"
+"  if not self then return end\n"
+"  C.sysfs_close_driver(self)\n"
+"  return \n"
+"end\n"
+"_priv.driver.__gc = _meth.driver.close\n"
+"\n"
+"-- method: open_path\n"
+"function _pub.driver.open_path(path)\n"
+"  local path_len = #path\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
+"  local self\n"
+"  self = C.sysfs_open_driver_path(path)\n"
+"  return obj_type_driver_push(self, this_flags)\n"
+"end\n"
+"\n"
+"_push.driver = obj_type_driver_push\n"
+"ffi.metatype(\"driver\", _priv.driver)\n"
+"-- End \"driver\" FFI interface\n"
 "\n", NULL };
 
 /* internal sysfs device iterator function */
@@ -2530,6 +2654,46 @@ static int device__get_name__meth(lua_State *L) {
   return 0;
 }
 
+/* method: get_path */
+static int device__get_path__meth(lua_State *L) {
+  device * this;
+  this = obj_type_device_check(L,1);
+  lua_pushstring(L, this->path);
+  return 1;
+		
+  return 0;
+}
+
+/* method: get_bus_id */
+static int device__get_bus_id__meth(lua_State *L) {
+  device * this;
+  this = obj_type_device_check(L,1);
+  lua_pushstring(L, this->bus_id);
+  return 1;
+		
+  return 0;
+}
+
+/* method: get_driver_name */
+static int device__get_driver_name__meth(lua_State *L) {
+  device * this;
+  this = obj_type_device_check(L,1);
+  lua_pushstring(L, this->driver_name);
+  return 1;
+		
+  return 0;
+}
+
+/* method: get_subsystem */
+static int device__get_subsystem__meth(lua_State *L) {
+  device * this;
+  this = obj_type_device_check(L,1);
+  lua_pushstring(L, this->subsystem);
+  return 1;
+		
+  return 0;
+}
+
 /* method: open */
 static int class_device__open__meth(lua_State *L) {
   size_t classname_len;
@@ -2677,8 +2841,8 @@ static int class__get_devices__meth(lua_State *L) {
   return 1;
 }
 
-/* method: for_each_device */
-static int class__for_each_device__meth(lua_State *L) {
+/* method: get_class_devices */
+static int class__get_class_devices__meth(lua_State *L) {
   class * this;
   this = obj_type_class_check(L,1);
   struct dlist *clsdevlist;
@@ -2714,8 +2878,8 @@ static int bus__close__meth(lua_State *L) {
   return 0;
 }
 
-/* method: for_each_device */
-static int bus__for_each_device__meth(lua_State *L) {
+/* method: get_devices */
+static int bus__get_devices__meth(lua_State *L) {
   bus * this;
   this = obj_type_bus_check(L,1);
   struct dlist *list;
@@ -2729,6 +2893,79 @@ static int bus__for_each_device__meth(lua_State *L) {
 		return 1;
   }
 		
+  return 0;
+}
+
+/* method: open */
+static int driver__open__meth(lua_State *L) {
+  size_t bus_name_len;
+  const char * bus_name;
+  size_t drv_name_len;
+  const char * drv_name;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  driver * this;
+  bus_name = luaL_checklstring(L,1,&(bus_name_len));
+  drv_name = luaL_checklstring(L,2,&(drv_name_len));
+  this = sysfs_open_driver(bus_name, drv_name);
+  obj_type_driver_push(L, this, this_flags);
+  return 1;
+}
+
+/* method: close */
+static int driver__close__meth(lua_State *L) {
+  int this_flags = 0;
+  driver * this;
+  this = obj_type_driver_delete(L,1,&(this_flags));
+  if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
+  sysfs_close_driver(this);
+  return 0;
+}
+
+/* method: open_path */
+static int driver__open_path__meth(lua_State *L) {
+  size_t path_len;
+  const char * path;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  driver * this;
+  path = luaL_checklstring(L,1,&(path_len));
+  this = sysfs_open_driver_path(path);
+  obj_type_driver_push(L, this, this_flags);
+  return 1;
+}
+
+/* method: get_devices */
+static int driver__get_devices__meth(lua_State *L) {
+  driver * this;
+  this = obj_type_driver_check(L,1);
+  struct dlist *list = sysfs_get_driver_devices(this);
+
+  if (list) {
+	dlist_start(list);
+	lua_pushlightuserdata(L, list);
+	lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
+	return 1;
+  }
+		
+  return 0;
+}
+
+/* method: get_name */
+static int driver__get_name__meth(lua_State *L) {
+  driver * this;
+  this = obj_type_driver_check(L,1);
+  lua_pushstring(L, this->name);
+  return 1;
+                
+  return 0;
+}
+
+/* method: get_path */
+static int driver__get_path__meth(lua_State *L) {
+  driver * this;
+  this = obj_type_driver_check(L,1);
+  lua_pushstring(L, this->path);
+  return 1;
+                
   return 0;
 }
 
@@ -2810,6 +3047,10 @@ static const luaL_Reg obj_device_methods[] = {
   {"get_parent", device__get_parent__meth},
   {"get_bus", device__get_bus__meth},
   {"get_name", device__get_name__meth},
+  {"get_path", device__get_path__meth},
+  {"get_bus_id", device__get_bus_id__meth},
+  {"get_driver_name", device__get_driver_name__meth},
+  {"get_subsystem", device__get_subsystem__meth},
   {NULL, NULL}
 };
 
@@ -2886,7 +3127,7 @@ static const luaL_Reg obj_class_pub_funcs[] = {
 static const luaL_Reg obj_class_methods[] = {
   {"close", class__close__meth},
   {"get_devices", class__get_devices__meth},
-  {"for_each_device", class__for_each_device__meth},
+  {"get_class_devices", class__get_class_devices__meth},
   {NULL, NULL}
 };
 
@@ -2920,7 +3161,7 @@ static const luaL_Reg obj_bus_pub_funcs[] = {
 
 static const luaL_Reg obj_bus_methods[] = {
   {"close", bus__close__meth},
-  {"for_each_device", bus__for_each_device__meth},
+  {"get_devices", bus__get_devices__meth},
   {NULL, NULL}
 };
 
@@ -2947,6 +3188,43 @@ static const reg_impl obj_bus_implements[] = {
   {NULL, NULL}
 };
 
+static const luaL_Reg obj_driver_pub_funcs[] = {
+  {"open", driver__open__meth},
+  {"open_path", driver__open_path__meth},
+  {NULL, NULL}
+};
+
+static const luaL_Reg obj_driver_methods[] = {
+  {"close", driver__close__meth},
+  {"get_devices", driver__get_devices__meth},
+  {"get_name", driver__get_name__meth},
+  {"get_path", driver__get_path__meth},
+  {NULL, NULL}
+};
+
+static const luaL_Reg obj_driver_metas[] = {
+  {"__gc", driver__close__meth},
+  {"__tostring", obj_udata_default_tostring},
+  {"__eq", obj_udata_default_equal},
+  {NULL, NULL}
+};
+
+static const obj_base obj_driver_bases[] = {
+  {-1, NULL}
+};
+
+static const obj_field obj_driver_fields[] = {
+  {NULL, 0, 0, 0}
+};
+
+static const obj_const obj_driver_constants[] = {
+  {NULL, NULL, 0.0 , 0}
+};
+
+static const reg_impl obj_driver_implements[] = {
+  {NULL, NULL}
+};
+
 static const luaL_Reg sysfs_function[] = {
   {"get_mnt_path", sysfs__get_mnt_path__func},
   {NULL, NULL}
@@ -2965,6 +3243,7 @@ static const reg_sub_module reg_sub_modules[] = {
   { &(obj_type_class_device), REG_OBJECT, obj_class_device_pub_funcs, obj_class_device_methods, obj_class_device_metas, obj_class_device_bases, obj_class_device_fields, obj_class_device_constants, obj_class_device_implements, 0},
   { &(obj_type_class), REG_OBJECT, obj_class_pub_funcs, obj_class_methods, obj_class_metas, obj_class_bases, obj_class_fields, obj_class_constants, obj_class_implements, 0},
   { &(obj_type_bus), REG_OBJECT, obj_bus_pub_funcs, obj_bus_methods, obj_bus_metas, obj_bus_bases, obj_bus_fields, obj_bus_constants, obj_bus_implements, 0},
+  { &(obj_type_driver), REG_OBJECT, obj_driver_pub_funcs, obj_driver_methods, obj_driver_metas, obj_driver_bases, obj_driver_fields, obj_driver_constants, obj_driver_implements, 0},
   {NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0}
 };
 
