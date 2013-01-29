@@ -24,7 +24,7 @@
 
 -- typedefs
 local typedefs = [[
-typedef struct sysfs_device device;
+typedef struct sysfs_device sysfs_device;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
@@ -33,7 +33,7 @@ ffi_cdef (typedefs)
 --
 -- device
 --
-object "device" {
+object "sysfs_device" {
 	c_source {
 	[[
 
@@ -49,7 +49,7 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	int obj_flags = 0;
 
 	if ((obj = dlist_next(list)) != NULL) {
-		obj_type_device_push(L, obj, obj_flags);
+		obj_type_sysfs_device_push(L, obj, obj_flags);
 		return 1;
 	} else {
 		return 0;
@@ -59,7 +59,7 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 },
 	-- open
 	constructor "open" {
-		c_call "device *" "sysfs_open_device" {
+		c_call "sysfs_device *" "sysfs_open_device" {
 						"const char *", "bus",
 						"const char *", "bus_id"
 		}
@@ -70,7 +70,7 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	},
 	-- open tree
 	constructor "open_tree" {
-		c_call "device *" "sysfs_open_device_tree" {
+		c_call "sysfs_device *" "sysfs_open_device_tree" {
 						"const char *", "path",
 		}
 	},
@@ -80,13 +80,13 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	},
 	-- open path
 	constructor "open_path" {
-		c_call "device *" "sysfs_open_device_path" {
+		c_call "sysfs_device *" "sysfs_open_device_path" {
 						"const char *", "path",
 		}
 	},
 	-- get parent device
 	method "get_parent" {
-		c_method_call "device *" "sysfs_get_device_parent" {}
+		c_method_call "sysfs_device *" "sysfs_get_device_parent" {}
 	},
 	-- get bus
 	method "get_bus" {

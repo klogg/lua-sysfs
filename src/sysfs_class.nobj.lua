@@ -67,7 +67,7 @@ object "sysfs_class_device" {
 	},
 	-- get device
 	method "get_device" {
-		c_method_call "device *" "sysfs_get_classdev_device" {}
+		c_method_call "sysfs_device *" "sysfs_get_classdev_device" {}
 	},
 	-- get name
 	method "get_name" {
