@@ -24,7 +24,7 @@
 
 -- typedefs
 local typedefs = [[
-typedef struct sysfs_class class;
+typedef struct sysfs_class sysfs_class;
 typedef struct sysfs_class_device class_device;
 ]]
 c_source "typedefs" (typedefs)
@@ -57,7 +57,7 @@ object "class_device" {
 	-- get class device
 	constructor "get" {
 		c_call "class_device *" "sysfs_get_class_device" {
-						"class *", "class",
+						"sysfs_class *", "class",
 						"const char *", "name"
 		}
 	},
@@ -106,10 +106,10 @@ object "class_device" {
 --
 -- sysfs class
 --
-object "class" {
+object "sysfs_class" {
 	-- open
 	constructor "open" {
-		c_call "class *" "sysfs_open_class" { "const char *", "name" }
+		c_call "sysfs_class *" "sysfs_open_class" { "const char *", "name" }
 	},
 	-- close
 	destructor "close" {
