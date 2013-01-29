@@ -24,7 +24,7 @@
 
 -- typedefs
 local typedefs = [[
-typedef struct sysfs_attribute attribute;
+typedef struct sysfs_attribute sysfs_attribute;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
@@ -33,10 +33,10 @@ ffi_cdef (typedefs)
 --
 -- attribute
 --
-object "attribute" {
+object "sysfs_attribute" {
 	-- open
 	constructor "open" {
-		c_call "attribute *" "sysfs_open_attribute" {
+		c_call "sysfs_attribute *" "sysfs_open_attribute" {
 						"const char *", "path",
 		}
 	},
