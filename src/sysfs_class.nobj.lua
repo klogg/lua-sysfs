@@ -25,7 +25,7 @@
 -- typedefs
 local typedefs = [[
 typedef struct sysfs_class sysfs_class;
-typedef struct sysfs_class_device class_device;
+typedef struct sysfs_class_device sysfs_class_device;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
@@ -34,29 +34,29 @@ ffi_cdef (typedefs)
 --
 -- class device
 --
-object "class_device" {
+object "sysfs_class_device" {
 	-- open
 	constructor "open" {
-		c_call "class_device *" "sysfs_open_class_device" {
+		c_call "sysfs_class_device *" "sysfs_open_class_device" {
 						"const char *", "classname",
 						"const char *", "name"
 		}
 	},
 	-- open path
 	constructor "open_path" {
-		c_call "class_device *" "sysfs_open_class_device_path" {
+		c_call "sysfs_class_device *" "sysfs_open_class_device_path" {
 						"const char *", "path"
 		}
 	},
 	-- get class device parent
 	constructor "get_parent" {
-		c_call "class_device *" "sysfs_get_classdev_parent" {
-						"class_device *", "clsdev"
+		c_call "sysfs_class_device *" "sysfs_get_classdev_parent" {
+						"sysfs_class_device *", "clsdev"
 		}
 	},
 	-- get class device
 	constructor "get" {
-		c_call "class_device *" "sysfs_get_class_device" {
+		c_call "sysfs_class_device *" "sysfs_get_class_device" {
 						"sysfs_class *", "class",
 						"const char *", "name"
 		}
@@ -134,7 +134,7 @@ static int class_device_iter (lua_State *L) {
 	int obj_flags = 0;
 
 	if ((obj = dlist_next(clsdevlist)) != NULL) {
-		obj_type_class_device_push(L, obj, obj_flags);
+		obj_type_sysfs_class_device_push(L, obj, obj_flags);
 		return 1;
 	} else {
 		return 0;
