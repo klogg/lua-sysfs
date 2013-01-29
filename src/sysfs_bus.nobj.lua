@@ -24,19 +24,19 @@
 
 -- typedefs
 local typedefs = [[
-typedef struct sysfs_bus bus;
+typedef struct sysfs_bus sysfs_bus;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
-object "bus" {
+object "sysfs_bus" {
 
 	userdata_type = "simple ptr",
 
 	-- open bus
 	constructor "open" {
-		c_call "bus *" "sysfs_open_bus" { "const char *", "name" }
+		c_call "sysfs_bus *" "sysfs_open_bus" { "const char *", "name" }
 	},
 	-- close bus
 	destructor "close" {
