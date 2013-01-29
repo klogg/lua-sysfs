@@ -24,18 +24,18 @@
 
 -- typedefs
 local typedefs = [[
-typedef struct sysfs_driver driver;
+typedef struct sysfs_driver sysfs_driver;
 ]]
 c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
-object "driver" {
+object "sysfs_driver" {
 	userdata_type = "simple ptr",
 
 	-- open
 	constructor "open" {
-		c_call "driver *" "sysfs_open_driver" {
+		c_call "sysfs_driver *" "sysfs_open_driver" {
 						"const char *", "bus_name",
 						"const char *", "drv_name"
 		}
@@ -46,7 +46,7 @@ object "driver" {
 	},
 	-- open path
 	constructor "open_path" {
-		c_call "driver *" "sysfs_open_driver_path" {
+		c_call "sysfs_driver *" "sysfs_open_driver_path" {
 						"const char *", "path",
 		}
 	},
