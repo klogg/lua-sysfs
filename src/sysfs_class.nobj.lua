@@ -65,6 +65,10 @@ object "class_device" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class_device" {}
 	},
+	-- get device
+	method "get_device" {
+		c_method_call "device *" "sysfs_get_classdev_device" {}
+	},
 	-- get name
 	method "get_name" {
 		c_source[[
