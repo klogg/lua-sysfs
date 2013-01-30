@@ -35,6 +35,9 @@ ffi_cdef (typedefs)
 -- class device
 --
 object "sysfs_class_device" {
+	userdata_type = "generic",
+	no_weak_ref = true,
+
 	-- open
 	constructor "open" {
 		c_call "sysfs_class_device *" "sysfs_open_class_device" {
@@ -107,6 +110,9 @@ object "sysfs_class_device" {
 -- sysfs class
 --
 object "sysfs_class" {
+	userdata_type = "generic",
+	no_weak_ref = true,
+
 	-- open
 	constructor "open" {
 		c_call "sysfs_class *" "sysfs_open_class" { "const char *", "name" }
@@ -124,7 +130,7 @@ c_source {
 [[
 
 static int class_device_iter (lua_State *L) {
-	struct dlist *clsdevlist = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
+	struct dlist *clsdevlist = lua_touserdata(L, lua_upvalueindex(1));
 	struct sysfs_class_device *obj;
 
 	/* TODO: clarify the flag types
@@ -145,9 +151,7 @@ static int class_device_iter (lua_State *L) {
 	-- get a list of devices
 	method "get_class_devices" {
 		c_source[[
-  struct dlist *clsdevlist;
-
-  clsdevlist = sysfs_get_class_devices(${this});
+  struct dlist *clsdevlist = sysfs_get_class_devices(${this});
 
   if (clsdevlist) {
 		dlist_start(clsdevlist);
