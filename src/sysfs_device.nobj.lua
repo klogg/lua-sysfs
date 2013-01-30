@@ -54,9 +54,9 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	if ((obj = dlist_next(list)) != NULL) {
 		obj_type_sysfs_device_push(L, obj, obj_flags);
 		return 1;
-	} else {
-		return 0;
 	}
+
+	return 0;
 }
 	]]
 },
