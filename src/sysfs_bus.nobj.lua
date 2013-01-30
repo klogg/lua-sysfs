@@ -32,7 +32,8 @@ ffi_cdef (typedefs)
 
 object "sysfs_bus" {
 
-	userdata_type = "simple ptr",
+	userdata_type = "generic",
+	no_weak_ref = true,
 
 	-- open bus
 	constructor "open" {
