@@ -31,7 +31,8 @@ c_source "typedefs" (typedefs)
 ffi_cdef (typedefs)
 
 object "sysfs_driver" {
-	userdata_type = "simple ptr",
+	userdata_type = "generic",
+	no_weak_ref = true,
 
 	-- open
 	constructor "open" {
