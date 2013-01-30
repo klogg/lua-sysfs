@@ -95,6 +95,12 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	method "get_bus" {
 		c_method_call "int" "sysfs_get_device_bus" {}
 	},
+	-- get attribute
+	method "get_attr" {
+		c_method_call "sysfs_attribute *" "sysfs_get_device_attr" {
+						"const char *", "name",
+		}
+	},
 	--
 	-- lua binding specific methods for accessing 'struct sysfs_device' members
 	--
