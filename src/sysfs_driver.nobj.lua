@@ -51,6 +51,12 @@ object "sysfs_driver" {
 						"const char *", "path",
 		}
 	},
+	-- get attribute
+	method "get_attr" {
+		c_method_call "sysfs_attribute *" "sysfs_get_driver_attr" {
+						"const char *", "name"
+		}
+	},
 	-- sysfs get devices iterator
 	method "get_devices" {
 	c_source[[
