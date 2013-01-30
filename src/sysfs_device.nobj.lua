@@ -30,15 +30,9 @@ c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
---
--- device
---
-object "sysfs_device" {
-	userdata_type = "generic",
-	no_weak_ref = false,
-
-	c_source {
-	[[
+-- internal functions
+c_source "src" {
+[[
 
 /* internal sysfs device iterator function */
 static int lua_sysfs_device_iterator(lua_State *L) {
@@ -58,8 +52,16 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 
 	return 0;
 }
-	]]
-},
+]]
+}
+
+--
+-- device
+--
+object "sysfs_device" {
+	userdata_type = "generic",
+	no_weak_ref = false,
+
 	-- open
 	constructor "open" {
 		c_call "sysfs_device *" "sysfs_open_device" {
