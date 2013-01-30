@@ -103,6 +103,20 @@ object "sysfs_device" {
 						"const char *", "name",
 		}
 	},
+	-- get attributes iterator
+	method "get_attributes" {
+		c_source [[
+  struct dlist *list = sysfs_get_device_attributes(${this});
+
+  if (list) {
+		dlist_start(list);
+		lua_pushlightuserdata(L, list);
+		lua_pushcclosure(L, lua_sysfs_attribute_iterator, 1);
+		return 1;
+  }
+]],
+	},
+
 	--
 	-- lua binding specific methods for accessing 'struct sysfs_device' members
 	--
