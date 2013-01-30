@@ -72,6 +72,20 @@ object "sysfs_class_device" {
 	method "get_device" {
 		c_method_call "sysfs_device *" "sysfs_get_classdev_device" {}
 	},
+	-- get attribute
+	method "get_attribute" {
+		c_method_call "sysfs_attribute *" "sysfs_get_classdev_attr" {
+						"const char *", "name"
+		}
+	},
+	-- get attributes
+	method "get_attributes" {
+		c_method_call "dlist *" "sysfs_get_classdev_attributes" {}
+	},
+
+	--
+	-- lua binding specific methods for accessing 'struct sysfs_device' members
+	--
 	-- get name
 	method "get_name" {
 		c_source[[
@@ -92,16 +106,6 @@ object "sysfs_class_device" {
   lua_pushstring(L, ${this}->classname);
   return 1;
 		]]
-	},
-	-- get attribute
-	method "get_attribute" {
-		c_method_call "sysfs_attribute *" "sysfs_get_classdev_attr" {
-						"const char *", "name"
-		}
-	},
-	-- get attributes
-	method "get_attributes" {
-		c_method_call "dlist *" "sysfs_get_classdev_attributes" {}
 	},
 }
 
