@@ -34,6 +34,9 @@ ffi_cdef (typedefs)
 -- device
 --
 object "sysfs_device" {
+	userdata_type = "generic",
+	no_weak_ref = false,
+
 	c_source {
 	[[
 
