@@ -275,16 +275,16 @@ typedef struct ffi_export_symbol {
 
 typedef struct dlist dlist;
 
-typedef struct sysfs_attribute attribute;
+typedef struct sysfs_attribute sysfs_attribute;
 
-typedef struct sysfs_device device;
+typedef struct sysfs_device sysfs_device;
 
-typedef struct sysfs_class class;
-typedef struct sysfs_class_device class_device;
+typedef struct sysfs_class sysfs_class;
+typedef struct sysfs_class_device sysfs_class_device;
 
-typedef struct sysfs_bus bus;
+typedef struct sysfs_bus sysfs_bus;
 
-typedef struct sysfs_driver driver;
+typedef struct sysfs_driver sysfs_driver;
 
 
 
@@ -294,24 +294,24 @@ static obj_type obj_types[] = {
 #define obj_type_id_dlist 0
 #define obj_type_dlist (obj_types[obj_type_id_dlist])
   { NULL, 0, OBJ_TYPE_FLAG_WEAK_REF, "dlist" },
-#define obj_type_id_attribute 1
-#define obj_type_attribute (obj_types[obj_type_id_attribute])
-  { NULL, 1, OBJ_TYPE_FLAG_WEAK_REF, "attribute" },
-#define obj_type_id_device 2
-#define obj_type_device (obj_types[obj_type_id_device])
-  { NULL, 2, OBJ_TYPE_FLAG_WEAK_REF, "device" },
-#define obj_type_id_class_device 3
-#define obj_type_class_device (obj_types[obj_type_id_class_device])
-  { NULL, 3, OBJ_TYPE_FLAG_WEAK_REF, "class_device" },
-#define obj_type_id_class 4
-#define obj_type_class (obj_types[obj_type_id_class])
-  { NULL, 4, OBJ_TYPE_FLAG_WEAK_REF, "class" },
-#define obj_type_id_bus 5
-#define obj_type_bus (obj_types[obj_type_id_bus])
-  { NULL, 5, OBJ_TYPE_SIMPLE, "bus" },
-#define obj_type_id_driver 6
-#define obj_type_driver (obj_types[obj_type_id_driver])
-  { NULL, 6, OBJ_TYPE_SIMPLE, "driver" },
+#define obj_type_id_sysfs_attribute 1
+#define obj_type_sysfs_attribute (obj_types[obj_type_id_sysfs_attribute])
+  { NULL, 1, 0, "sysfs_attribute" },
+#define obj_type_id_sysfs_device 2
+#define obj_type_sysfs_device (obj_types[obj_type_id_sysfs_device])
+  { NULL, 2, OBJ_TYPE_FLAG_WEAK_REF, "sysfs_device" },
+#define obj_type_id_sysfs_class_device 3
+#define obj_type_sysfs_class_device (obj_types[obj_type_id_sysfs_class_device])
+  { NULL, 3, 0, "sysfs_class_device" },
+#define obj_type_id_sysfs_class 4
+#define obj_type_sysfs_class (obj_types[obj_type_id_sysfs_class])
+  { NULL, 4, 0, "sysfs_class" },
+#define obj_type_id_sysfs_bus 5
+#define obj_type_sysfs_bus (obj_types[obj_type_id_sysfs_bus])
+  { NULL, 5, 0, "sysfs_bus" },
+#define obj_type_id_sysfs_driver 6
+#define obj_type_sysfs_driver (obj_types[obj_type_id_sysfs_driver])
+  { NULL, 6, 0, "sysfs_driver" },
   {NULL, -1, 0, NULL},
 };
 
@@ -1393,59 +1393,59 @@ static char *obj_interfaces[] = {
 #define obj_type_dlist_push(L, obj, flags) \
 	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_dlist), flags)
 
-#define obj_type_attribute_check(L, _index) \
-	obj_udata_luacheck(L, _index, &(obj_type_attribute))
-#define obj_type_attribute_optional(L, _index) \
-	obj_udata_luaoptional(L, _index, &(obj_type_attribute))
-#define obj_type_attribute_delete(L, _index, flags) \
-	obj_udata_luadelete_weak(L, _index, &(obj_type_attribute), flags)
-#define obj_type_attribute_push(L, obj, flags) \
-	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_attribute), flags)
+#define obj_type_sysfs_attribute_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_attribute))
+#define obj_type_sysfs_attribute_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_attribute))
+#define obj_type_sysfs_attribute_delete(L, _index, flags) \
+	obj_udata_luadelete(L, _index, &(obj_type_sysfs_attribute), flags)
+#define obj_type_sysfs_attribute_push(L, obj, flags) \
+	obj_udata_luapush(L, obj, &(obj_type_sysfs_attribute), flags)
 
-#define obj_type_device_check(L, _index) \
-	obj_udata_luacheck(L, _index, &(obj_type_device))
-#define obj_type_device_optional(L, _index) \
-	obj_udata_luaoptional(L, _index, &(obj_type_device))
-#define obj_type_device_delete(L, _index, flags) \
-	obj_udata_luadelete_weak(L, _index, &(obj_type_device), flags)
-#define obj_type_device_push(L, obj, flags) \
-	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_device), flags)
+#define obj_type_sysfs_device_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_device))
+#define obj_type_sysfs_device_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_device))
+#define obj_type_sysfs_device_delete(L, _index, flags) \
+	obj_udata_luadelete_weak(L, _index, &(obj_type_sysfs_device), flags)
+#define obj_type_sysfs_device_push(L, obj, flags) \
+	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_sysfs_device), flags)
 
-#define obj_type_class_device_check(L, _index) \
-	obj_udata_luacheck(L, _index, &(obj_type_class_device))
-#define obj_type_class_device_optional(L, _index) \
-	obj_udata_luaoptional(L, _index, &(obj_type_class_device))
-#define obj_type_class_device_delete(L, _index, flags) \
-	obj_udata_luadelete_weak(L, _index, &(obj_type_class_device), flags)
-#define obj_type_class_device_push(L, obj, flags) \
-	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_class_device), flags)
+#define obj_type_sysfs_class_device_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_class_device))
+#define obj_type_sysfs_class_device_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_class_device))
+#define obj_type_sysfs_class_device_delete(L, _index, flags) \
+	obj_udata_luadelete(L, _index, &(obj_type_sysfs_class_device), flags)
+#define obj_type_sysfs_class_device_push(L, obj, flags) \
+	obj_udata_luapush(L, obj, &(obj_type_sysfs_class_device), flags)
 
-#define obj_type_class_check(L, _index) \
-	obj_udata_luacheck(L, _index, &(obj_type_class))
-#define obj_type_class_optional(L, _index) \
-	obj_udata_luaoptional(L, _index, &(obj_type_class))
-#define obj_type_class_delete(L, _index, flags) \
-	obj_udata_luadelete_weak(L, _index, &(obj_type_class), flags)
-#define obj_type_class_push(L, obj, flags) \
-	obj_udata_luapush_weak(L, (void *)obj, &(obj_type_class), flags)
+#define obj_type_sysfs_class_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_class))
+#define obj_type_sysfs_class_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_class))
+#define obj_type_sysfs_class_delete(L, _index, flags) \
+	obj_udata_luadelete(L, _index, &(obj_type_sysfs_class), flags)
+#define obj_type_sysfs_class_push(L, obj, flags) \
+	obj_udata_luapush(L, obj, &(obj_type_sysfs_class), flags)
 
-#define obj_type_bus_check(L, _index) \
-	*((bus **)obj_simple_udata_luacheck(L, _index, &(obj_type_bus)))
-#define obj_type_bus_optional(L, _index) \
-	*((bus **)obj_simple_udata_luaoptional(L, _index, &(obj_type_bus)))
-#define obj_type_bus_delete(L, _index) \
-	*((bus **)obj_simple_udata_luadelete(L, _index, &(obj_type_bus)))
-#define obj_type_bus_push(L, obj) \
-	obj_simple_udata_luapush(L, &(obj), sizeof(bus), &(obj_type_bus))
+#define obj_type_sysfs_bus_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_bus))
+#define obj_type_sysfs_bus_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_bus))
+#define obj_type_sysfs_bus_delete(L, _index, flags) \
+	obj_udata_luadelete(L, _index, &(obj_type_sysfs_bus), flags)
+#define obj_type_sysfs_bus_push(L, obj, flags) \
+	obj_udata_luapush(L, obj, &(obj_type_sysfs_bus), flags)
 
-#define obj_type_driver_check(L, _index) \
-	*((driver **)obj_simple_udata_luacheck(L, _index, &(obj_type_driver)))
-#define obj_type_driver_optional(L, _index) \
-	*((driver **)obj_simple_udata_luaoptional(L, _index, &(obj_type_driver)))
-#define obj_type_driver_delete(L, _index) \
-	*((driver **)obj_simple_udata_luadelete(L, _index, &(obj_type_driver)))
-#define obj_type_driver_push(L, obj) \
-	obj_simple_udata_luapush(L, &(obj), sizeof(driver), &(obj_type_driver))
+#define obj_type_sysfs_driver_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_driver))
+#define obj_type_sysfs_driver_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_driver))
+#define obj_type_sysfs_driver_delete(L, _index, flags) \
+	obj_udata_luadelete(L, _index, &(obj_type_sysfs_driver), flags)
+#define obj_type_sysfs_driver_push(L, obj, flags) \
+	obj_udata_luapush(L, obj, &(obj_type_sysfs_driver), flags)
 
 
 
@@ -1620,76 +1620,82 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "ffi.cdef[[\n"
 "typedef struct dlist dlist;\n"
-"typedef struct attribute attribute;\n"
-"typedef struct device device;\n"
-"typedef struct class_device class_device;\n"
-"typedef struct class class;\n"
-"typedef struct bus bus;\n"
-"typedef struct driver driver;\n"
+"typedef struct sysfs_attribute sysfs_attribute;\n"
+"typedef struct sysfs_device sysfs_device;\n"
+"typedef struct sysfs_class_device sysfs_class_device;\n"
+"typedef struct sysfs_class sysfs_class;\n"
+"typedef struct sysfs_bus sysfs_bus;\n"
+"typedef struct sysfs_driver sysfs_driver;\n"
 "\n"
 "]]\n"
 "\n"
 "ffi.cdef[[\n"
 "typedef struct dlist dlist;\n"
 "\n"
-"typedef struct sysfs_attribute attribute;\n"
+"typedef struct sysfs_attribute sysfs_attribute;\n"
 "\n"
-"attribute * sysfs_open_attribute(const char *);\n"
+"sysfs_attribute * sysfs_open_attribute(const char *);\n"
 "\n"
-"void sysfs_close_attribute(attribute *);\n"
+"void sysfs_close_attribute(sysfs_attribute *);\n"
 "\n"
-"typedef struct sysfs_device device;\n"
+"typedef struct sysfs_device sysfs_device;\n"
 "\n"
-"device * sysfs_open_device(const char *, const char *);\n"
+"sysfs_device * sysfs_open_device(const char *, const char *);\n"
 "\n"
-"void sysfs_close_device(device *);\n"
+"void sysfs_close_device(sysfs_device *);\n"
 "\n"
-"device * sysfs_open_device_tree(const char *);\n"
+"sysfs_device * sysfs_open_device_tree(const char *);\n"
 "\n"
-"void sysfs_close_device_tree(device *);\n"
+"void sysfs_close_device_tree(sysfs_device *);\n"
 "\n"
-"device * sysfs_open_device_path(const char *);\n"
+"sysfs_device * sysfs_open_device_path(const char *);\n"
 "\n"
-"device * sysfs_get_device_parent(device *);\n"
+"sysfs_device * sysfs_get_device_parent(sysfs_device *);\n"
 "\n"
-"int sysfs_get_device_bus(device *);\n"
+"int sysfs_get_device_bus(sysfs_device *);\n"
 "\n"
-"typedef struct sysfs_class class;\n"
-"typedef struct sysfs_class_device class_device;\n"
+"sysfs_attribute * sysfs_get_device_attr(sysfs_device *, const char *);\n"
 "\n"
-"class_device * sysfs_open_class_device(const char *, const char *);\n"
+"typedef struct sysfs_class sysfs_class;\n"
+"typedef struct sysfs_class_device sysfs_class_device;\n"
 "\n"
-"class_device * sysfs_open_class_device_path(const char *);\n"
+"sysfs_class_device * sysfs_open_class_device(const char *, const char *);\n"
 "\n"
-"class_device * sysfs_get_classdev_parent(class_device *);\n"
+"sysfs_class_device * sysfs_open_class_device_path(const char *);\n"
 "\n"
-"class_device * sysfs_get_class_device(class *, const char *);\n"
+"sysfs_class_device * sysfs_get_classdev_parent(sysfs_class_device *);\n"
 "\n"
-"void sysfs_close_class_device(class_device *);\n"
+"sysfs_class_device * sysfs_get_class_device(sysfs_class *, const char *);\n"
 "\n"
-"attribute * sysfs_get_classdev_attr(class_device *, const char *);\n"
+"void sysfs_close_class_device(sysfs_class_device *);\n"
 "\n"
-"dlist * sysfs_get_classdev_attributes(class_device *);\n"
+"sysfs_device * sysfs_get_classdev_device(sysfs_class_device *);\n"
 "\n"
-"class * sysfs_open_class(const char *);\n"
+"sysfs_attribute * sysfs_get_classdev_attr(sysfs_class_device *, const char *);\n"
 "\n"
-"void sysfs_close_class(class *);\n"
+"dlist * sysfs_get_classdev_attributes(sysfs_class_device *);\n"
 "\n"
-"dlist * sysfs_get_class_devices(class *);\n"
+"sysfs_class * sysfs_open_class(const char *);\n"
 "\n"
-"typedef struct sysfs_bus bus;\n"
+"void sysfs_close_class(sysfs_class *);\n"
 "\n"
-"bus * sysfs_open_bus(const char *);\n"
+"dlist * sysfs_get_class_devices(sysfs_class *);\n"
 "\n"
-"void sysfs_close_bus(bus *);\n"
+"typedef struct sysfs_bus sysfs_bus;\n"
 "\n"
-"typedef struct sysfs_driver driver;\n"
+"sysfs_bus * sysfs_open_bus(const char *);\n"
 "\n"
-"driver * sysfs_open_driver(const char *, const char *);\n"
+"void sysfs_close_bus(sysfs_bus *);\n"
 "\n"
-"void sysfs_close_driver(driver *);\n"
+"typedef struct sysfs_driver sysfs_driver;\n"
 "\n"
-"driver * sysfs_open_driver_path(const char *);\n"
+"sysfs_driver * sysfs_open_driver(const char *, const char *);\n"
+"\n"
+"void sysfs_close_driver(sysfs_driver *);\n"
+"\n"
+"sysfs_driver * sysfs_open_driver_path(const char *);\n"
+"\n"
+"sysfs_attribute * sysfs_get_driver_attr(sysfs_driver *, const char *);\n"
 "\n"
 "\n"
 "]]\n"
@@ -1870,26 +1876,26 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "end\n"
 "\n"
 "\n"
-"local obj_type_attribute_check\n"
-"local obj_type_attribute_delete\n"
-"local obj_type_attribute_push\n"
+"local obj_type_sysfs_attribute_check\n"
+"local obj_type_sysfs_attribute_delete\n"
+"local obj_type_sysfs_attribute_push\n"
 "\n"
 "do\n"
-"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"attribute\", \"attribute *\")\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_attribute\", \"sysfs_attribute *\")\n"
 "\n"
-"	function obj_type_attribute_check(ptr)\n"
+"	function obj_type_sysfs_attribute_check(ptr)\n"
 "		-- if ptr is nil or is the correct type, then just return it.\n"
 "		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
 "		-- check if it is a compatible type.\n"
 "		local ctype = tostring(ffi.typeof(ptr))\n"
-"		local bcaster = _obj_subs.attribute[ctype]\n"
+"		local bcaster = _obj_subs.sysfs_attribute[ctype]\n"
 "		if bcaster then\n"
 "			return bcaster(ptr)\n"
 "		end\n"
-"		return error(\"Expected 'attribute *'\", 2)\n"
+"		return error(\"Expected 'sysfs_attribute *'\", 2)\n"
 "	end\n"
 "\n"
-"	function obj_type_attribute_delete(ptr)\n"
+"	function obj_type_sysfs_attribute_delete(ptr)\n"
 "		local id = obj_ptr_to_id(ptr)\n"
 "		local flags = nobj_obj_flags[id]\n"
 "		if not flags then return nil, 0 end\n"
@@ -1898,317 +1904,308 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "		return ptr, flags\n"
 "	end\n"
 "\n"
-"	function obj_type_attribute_push(ptr, flags)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		-- check weak refs\n"
-"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
+"	function obj_type_sysfs_attribute_push(ptr, flags)\n"
 "\n"
 "		if flags ~= 0 then\n"
-"			nobj_obj_flags[id] = flags\n"
-"			ffi.gc(ptr, obj_mt.__gc)\n"
-"		end\n"
-"		nobj_weak_objects[id] = ptr\n"
-"		return ptr\n"
-"	end\n"
-"\n"
-"	function obj_mt:__tostring()\n"
-"		return sformat(\"attribute: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
-"	end\n"
-"\n"
-"	-- type checking function for C API.\n"
-"	_priv[obj_type] = obj_type_attribute_check\n"
-"	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr, flags)\n"
-"		return obj_type_attribute_push(ffi.cast(obj_ctype,ptr), flags)\n"
-"	end\n"
-"\n"
-"	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = obj_type_attribute_check\n"
-"	obj_mt.ffi_check = obj_type_attribute_check\n"
-"end\n"
-"\n"
-"\n"
-"local obj_type_device_check\n"
-"local obj_type_device_delete\n"
-"local obj_type_device_push\n"
-"\n"
-"do\n"
-"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"device\", \"device *\")\n"
-"\n"
-"	function obj_type_device_check(ptr)\n"
-"		-- if ptr is nil or is the correct type, then just return it.\n"
-"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
-"		-- check if it is a compatible type.\n"
-"		local ctype = tostring(ffi.typeof(ptr))\n"
-"		local bcaster = _obj_subs.device[ctype]\n"
-"		if bcaster then\n"
-"			return bcaster(ptr)\n"
-"		end\n"
-"		return error(\"Expected 'device *'\", 2)\n"
-"	end\n"
-"\n"
-"	function obj_type_device_delete(ptr)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		local flags = nobj_obj_flags[id]\n"
-"		if not flags then return nil, 0 end\n"
-"		ffi.gc(ptr, nil)\n"
-"		nobj_obj_flags[id] = nil\n"
-"		return ptr, flags\n"
-"	end\n"
-"\n"
-"	function obj_type_device_push(ptr, flags)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		-- check weak refs\n"
-"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
-"\n"
-"		if flags ~= 0 then\n"
-"			nobj_obj_flags[id] = flags\n"
-"			ffi.gc(ptr, obj_mt.__gc)\n"
-"		end\n"
-"		nobj_weak_objects[id] = ptr\n"
-"		return ptr\n"
-"	end\n"
-"\n"
-"	function obj_mt:__tostring()\n"
-"		return sformat(\"device: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
-"	end\n"
-"\n"
-"	-- type checking function for C API.\n"
-"	_priv[obj_type] = obj_type_device_check\n"
-"	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr, flags)\n"
-"		return obj_type_device_push(ffi.cast(obj_ctype,ptr), flags)\n"
-"	end\n"
-"\n"
-"	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = obj_type_device_check\n"
-"	obj_mt.ffi_check = obj_type_device_check\n"
-"end\n"
-"\n"
-"\n"
-"local obj_type_class_device_check\n"
-"local obj_type_class_device_delete\n"
-"local obj_type_class_device_push\n"
-"\n"
-"do\n"
-"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"class_device\", \"class_device *\")\n"
-"\n"
-"	function obj_type_class_device_check(ptr)\n"
-"		-- if ptr is nil or is the correct type, then just return it.\n"
-"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
-"		-- check if it is a compatible type.\n"
-"		local ctype = tostring(ffi.typeof(ptr))\n"
-"		local bcaster = _obj_subs.class_device[ctype]\n"
-"		if bcaster then\n"
-"			return bcaster(ptr)\n"
-"		end\n", /* ----- CUT ----- */
-"		return error(\"Expected 'class_device *'\", 2)\n"
-"	end\n"
-"\n"
-"	function obj_type_class_device_delete(ptr)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		local flags = nobj_obj_flags[id]\n"
-"		if not flags then return nil, 0 end\n"
-"		ffi.gc(ptr, nil)\n"
-"		nobj_obj_flags[id] = nil\n"
-"		return ptr, flags\n"
-"	end\n"
-"\n"
-"	function obj_type_class_device_push(ptr, flags)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		-- check weak refs\n"
-"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
-"\n"
-"		if flags ~= 0 then\n"
-"			nobj_obj_flags[id] = flags\n"
-"			ffi.gc(ptr, obj_mt.__gc)\n"
-"		end\n"
-"		nobj_weak_objects[id] = ptr\n"
-"		return ptr\n"
-"	end\n"
-"\n"
-"	function obj_mt:__tostring()\n"
-"		return sformat(\"class_device: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
-"	end\n"
-"\n"
-"	-- type checking function for C API.\n"
-"	_priv[obj_type] = obj_type_class_device_check\n"
-"	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr, flags)\n"
-"		return obj_type_class_device_push(ffi.cast(obj_ctype,ptr), flags)\n"
-"	end\n"
-"\n"
-"	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = obj_type_class_device_check\n"
-"	obj_mt.ffi_check = obj_type_class_device_check\n"
-"end\n"
-"\n"
-"\n"
-"local obj_type_class_check\n"
-"local obj_type_class_delete\n"
-"local obj_type_class_push\n"
-"\n"
-"do\n"
-"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"class\", \"class *\")\n"
-"\n"
-"	function obj_type_class_check(ptr)\n"
-"		-- if ptr is nil or is the correct type, then just return it.\n"
-"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
-"		-- check if it is a compatible type.\n"
-"		local ctype = tostring(ffi.typeof(ptr))\n"
-"		local bcaster = _obj_subs.class[ctype]\n"
-"		if bcaster then\n"
-"			return bcaster(ptr)\n"
-"		end\n"
-"		return error(\"Expected 'class *'\", 2)\n"
-"	end\n"
-"\n"
-"	function obj_type_class_delete(ptr)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		local flags = nobj_obj_flags[id]\n"
-"		if not flags then return nil, 0 end\n"
-"		ffi.gc(ptr, nil)\n"
-"		nobj_obj_flags[id] = nil\n"
-"		return ptr, flags\n"
-"	end\n"
-"\n"
-"	function obj_type_class_push(ptr, flags)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		-- check weak refs\n"
-"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
-"\n"
-"		if flags ~= 0 then\n"
-"			nobj_obj_flags[id] = flags\n"
-"			ffi.gc(ptr, obj_mt.__gc)\n"
-"		end\n"
-"		nobj_weak_objects[id] = ptr\n"
-"		return ptr\n"
-"	end\n"
-"\n"
-"	function obj_mt:__tostring()\n"
-"		return sformat(\"class: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
-"	end\n"
-"\n"
-"	-- type checking function for C API.\n"
-"	_priv[obj_type] = obj_type_class_check\n"
-"	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr, flags)\n"
-"		return obj_type_class_push(ffi.cast(obj_ctype,ptr), flags)\n"
-"	end\n"
-"\n"
-"	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = obj_type_class_check\n"
-"	obj_mt.ffi_check = obj_type_class_check\n"
-"end\n"
-"\n"
-"\n"
-"local obj_type_bus_check\n"
-"local obj_type_bus_delete\n"
-"local obj_type_bus_push\n"
-"\n"
-"do\n"
-"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"bus\", \"bus *\")\n"
-"\n"
-"	function obj_type_bus_check(ptr)\n"
-"		return ptr\n"
-"	end\n"
-"\n"
-"	function obj_type_bus_delete(ptr)\n"
-"		local id = obj_ptr_to_id(ptr)\n"
-"		local flags = nobj_obj_flags[id]\n"
-"		if not flags then return ptr end\n"
-"		ffi.gc(ptr, nil)\n"
-"		nobj_obj_flags[id] = nil\n"
-"		return ptr\n"
-"	end\n"
-"\n"
-"	if obj_mt.__gc then\n"
-"		-- has __gc metamethod\n"
-"		function obj_type_bus_push(ptr)\n"
 "			local id = obj_ptr_to_id(ptr)\n"
-"			nobj_obj_flags[id] = true\n"
-"			return ffi.gc(ptr, obj_mt.__gc)\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
 "		end\n"
-"	else\n"
-"		-- no __gc metamethod\n"
-"		function obj_type_bus_push(ptr)\n"
-"			return ptr\n"
-"		end\n"
+"		return ptr\n"
 "	end\n"
 "\n"
 "	function obj_mt:__tostring()\n"
-"		return sformat(\"bus: %p\", self)\n"
+"		return sformat(\"sysfs_attribute: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
 "	end\n"
 "\n"
 "	-- type checking function for C API.\n"
-"	local function c_check(ptr)\n"
-"		if ffi.istype(obj_ctype, ptr) then return ptr end\n"
-"		return nil\n"
-"	end\n"
-"	_priv[obj_type] = c_check\n"
+"	_priv[obj_type] = obj_type_sysfs_attribute_check\n"
 "	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr)\n"
-"		return obj_type_bus_push(ffi.cast(obj_ctype, ptr)[0])\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_attribute_push(ffi.cast(obj_ctype,ptr), flags)\n"
 "	end\n"
 "\n"
 "	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = c_check\n"
-"	obj_mt.ffi_check = obj_type_bus_check\n"
+"	obj_mt.c_check = obj_type_sysfs_attribute_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_attribute_check\n"
 "end\n"
 "\n"
 "\n"
-"local obj_type_driver_check\n"
-"local obj_type_driver_delete\n"
-"local obj_type_driver_push\n"
+"local obj_type_sysfs_device_check\n"
+"local obj_type_sysfs_device_delete\n"
+"local obj_type_sysfs_device_push\n"
 "\n"
 "do\n"
-"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"driver\", \"driver *\")\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_device\", \"sysfs_device *\")\n"
 "\n"
-"	function obj_type_driver_check(ptr)\n"
-"		return ptr\n"
+"	function obj_type_sysfs_device_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.sysfs_device[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'sysfs_device *'\", 2)\n"
 "	end\n"
 "\n"
-"	function obj_type_driver_delete(ptr)\n"
+"	function obj_type_sysfs_device_delete(ptr)\n"
 "		local id = obj_ptr_to_id(ptr)\n"
 "		local flags = nobj_obj_flags[id]\n"
-"		if not flags then return ptr end\n"
+"		if not flags then return nil, 0 end\n"
 "		ffi.gc(ptr, nil)\n"
 "		nobj_obj_flags[id] = nil\n"
-"		return ptr\n"
+"		return ptr, flags\n"
 "	end\n"
 "\n"
-"	if obj_mt.__gc then\n"
-"		-- has __gc metamethod\n"
-"		function obj_type_driver_push(ptr)\n"
-"			local id = obj_ptr_to_id(ptr)\n"
-"			nobj_obj_flags[id] = true\n"
-"			return ffi.gc(ptr, obj_mt.__gc)\n"
+"	function obj_type_sysfs_device_push(ptr, flags)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		-- check weak refs\n"
+"		if nobj_obj_flags[id] then return nobj_weak_objects[id] end\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
 "		end\n"
-"	else\n"
-"		-- no __gc metamethod\n"
-"		function obj_type_driver_push(ptr)\n"
-"			return ptr\n"
-"		end\n"
+"		nobj_weak_objects[id] = ptr\n"
+"		return ptr\n"
 "	end\n"
 "\n"
 "	function obj_mt:__tostring()\n"
-"		return sformat(\"driver: %p\", self)\n"
+"		return sformat(\"sysfs_device: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
 "	end\n"
 "\n"
 "	-- type checking function for C API.\n"
-"	local function c_check(ptr)\n"
-"		if ffi.istype(obj_ctype, ptr) then return ptr end\n"
-"		return nil\n"
-"	end\n"
-"	_priv[obj_type] = c_check\n"
+"	_priv[obj_type] = obj_type_sysfs_device_check\n"
 "	-- push function for C API.\n"
-"	reg_table[obj_type] = function(ptr)\n"
-"		return obj_type_driver_push(ffi.cast(obj_ctype, ptr)[0])\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_device_push(ffi.cast(obj_ctype,ptr), flags)\n"
 "	end\n"
 "\n"
 "	-- export check functions for use in other modules.\n"
-"	obj_mt.c_check = c_check\n"
-"	obj_mt.ffi_check = obj_type_driver_check\n"
+"	obj_mt.c_check = obj_type_sysfs_device_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_device_check\n"
+"end\n"
+"\n"
+"\n"
+"local obj_type_sysfs_class_device_check\n"
+"local obj_type_sysfs_class_device_delete\n", /* ----- CUT ----- */
+"local obj_type_sysfs_class_device_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_class_device\", \"sysfs_class_device *\")\n"
+"\n"
+"	function obj_type_sysfs_class_device_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.sysfs_class_device[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'sysfs_class_device *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_class_device_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_class_device_push(ptr, flags)\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			local id = obj_ptr_to_id(ptr)\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"sysfs_class_device: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_sysfs_class_device_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_class_device_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_sysfs_class_device_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_class_device_check\n"
+"end\n"
+"\n"
+"\n"
+"local obj_type_sysfs_class_check\n"
+"local obj_type_sysfs_class_delete\n"
+"local obj_type_sysfs_class_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_class\", \"sysfs_class *\")\n"
+"\n"
+"	function obj_type_sysfs_class_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.sysfs_class[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'sysfs_class *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_class_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_class_push(ptr, flags)\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			local id = obj_ptr_to_id(ptr)\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"sysfs_class: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_sysfs_class_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_class_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_sysfs_class_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_class_check\n"
+"end\n"
+"\n"
+"\n"
+"local obj_type_sysfs_bus_check\n"
+"local obj_type_sysfs_bus_delete\n"
+"local obj_type_sysfs_bus_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_bus\", \"sysfs_bus *\")\n"
+"\n"
+"	function obj_type_sysfs_bus_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.sysfs_bus[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'sysfs_bus *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_bus_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_bus_push(ptr, flags)\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			local id = obj_ptr_to_id(ptr)\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"sysfs_bus: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_sysfs_bus_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_bus_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_sysfs_bus_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_bus_check\n"
+"end\n"
+"\n"
+"\n"
+"local obj_type_sysfs_driver_check\n"
+"local obj_type_sysfs_driver_delete\n"
+"local obj_type_sysfs_driver_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_driver\", \"sysfs_driver *\")\n"
+"\n"
+"	function obj_type_sysfs_driver_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.sysfs_driver[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'sysfs_driver *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_driver_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_driver_push(ptr, flags)\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			local id = obj_ptr_to_id(ptr)\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"sysfs_driver: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_sysfs_driver_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_driver_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_sysfs_driver_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_driver_check\n"
 "end\n"
 "\n"
 "\n"
@@ -2227,260 +2224,318 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "-- End \"dlist\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"attribute\" FFI interface\n"
+"-- Start \"sysfs_attribute\" FFI interface\n"
 "-- method: open\n"
-"function _pub.attribute.open(path)\n"
+"function _pub.sysfs_attribute.open(path)\n"
 "  local path_len = #path\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_attribute(path)\n"
-"  return obj_type_attribute_push(self, this_flags)\n"
+"  return obj_type_sysfs_attribute_push(self, this_flags)\n"
 "end\n"
-"register_default_constructor(_pub,\"attribute\",_pub.attribute.open)\n"
+"register_default_constructor(_pub,\"sysfs_attribute\",_pub.sysfs_attribute.open)\n"
 "\n"
 "-- method: close\n"
-"function _meth.attribute.close(self)\n"
-"  local self,this_flags = obj_type_attribute_delete(self)\n"
+"function _meth.sysfs_attribute.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_attribute_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_attribute(self)\n"
 "  return \n"
 "end\n"
-"_priv.attribute.__gc = _meth.attribute.close\n"
+"_priv.sysfs_attribute.__gc = _meth.sysfs_attribute.close\n"
 "\n"
-"_push.attribute = obj_type_attribute_push\n"
-"ffi.metatype(\"attribute\", _priv.attribute)\n"
-"-- End \"attribute\" FFI interface\n"
+"-- End \"sysfs_attribute\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"device\" FFI interface\n"
+"-- Start \"sysfs_device\" FFI interface\n"
 "-- method: open\n"
-"function _pub.device.open(bus, bus_id)\n"
+"function _pub.sysfs_device.open(bus, bus_id)\n"
 "  local bus_len = #bus\n"
 "  local bus_id_len = #bus_id\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_device(bus, bus_id)\n"
-"  return obj_type_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_device_push(self, this_flags)\n"
 "end\n"
-"register_default_constructor(_pub,\"device\",_pub.device.open)\n"
+"register_default_constructor(_pub,\"sysfs_device\",_pub.sysfs_device.open)\n"
 "\n"
 "-- method: close\n"
-"function _meth.device.close(self)\n"
-"  local self,this_flags = obj_type_device_delete(self)\n"
+"function _meth.sysfs_device.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_device_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_device(self)\n"
 "  return \n"
 "end\n"
-"_priv.device.__gc = _meth.device.close\n"
+"_priv.sysfs_device.__gc = _meth.sysfs_device.close\n"
 "\n"
 "-- method: open_tree\n"
-"function _pub.device.open_tree(path)\n"
+"function _pub.sysfs_device.open_tree(path)\n"
 "  local path_len = #path\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_device_tree(path)\n"
-"  return obj_type_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_device_push(self, this_flags)\n"
 "end\n"
 "\n"
 "-- method: close_tree\n"
-"function _meth.device.close_tree(self)\n"
-"  local self,this_flags = obj_type_device_delete(self)\n"
+"function _meth.sysfs_device.close_tree(self)\n"
+"  local self,this_flags = obj_type_sysfs_device_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_device_tree(self)\n"
 "  return \n"
 "end\n"
-"_priv.device.__gc = _meth.device.close_tree\n"
+"_priv.sysfs_device.__gc = _meth.sysfs_device.close_tree\n"
 "\n"
 "-- method: open_path\n"
-"function _pub.device.open_path(path)\n"
+"function _pub.sysfs_device.open_path(path)\n"
 "  local path_len = #path\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_device_path(path)\n"
-"  return obj_type_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_device_push(self, this_flags)\n"
 "end\n"
 "\n"
 "-- method: get_parent\n"
-"function _meth.device.get_parent(self)\n"
+"function _meth.sysfs_device.get_parent(self)\n"
 "  \n"
 "  local rc_sysfs_get_device_parent\n"
 "  rc_sysfs_get_device_parent = C.sysfs_get_device_parent(self)\n"
-"  return obj_type_device_push(rc_sysfs_get_device_parent, 0)\n"
+"  return obj_type_sysfs_device_push(rc_sysfs_get_device_parent, 0)\n"
 "end\n"
 "\n"
 "-- method: get_bus\n"
-"function _meth.device.get_bus(self)\n"
+"function _meth.sysfs_device.get_bus(self)\n"
 "  \n"
 "  local rc_sysfs_get_device_bus = 0\n"
 "  rc_sysfs_get_device_bus = C.sysfs_get_device_bus(self)\n"
 "  return rc_sysfs_get_device_bus\n"
 "end\n"
 "\n"
-"_push.device = obj_type_device_push\n"
-"ffi.metatype(\"device\", _priv.device)\n"
-"-- End \"device\" FFI interface\n"
+"-- method: get_attr\n"
+"function _meth.sysfs_device.get_attr(self, name)\n"
+"  \n"
+"  local name_len = #name\n"
+"  local rc_sysfs_get_device_attr\n"
+"  rc_sysfs_get_device_attr = C.sysfs_get_device_attr(self, name)\n"
+"  return obj_type_sysfs_attribute_push(rc_sysfs_get_device_attr, 0)\n"
+"end\n"
+"\n"
+"_push.sysfs_device = obj_type_sysfs_device_push\n"
+"ffi.metatype(\"sysfs_device\", _priv.sysfs_device)\n"
+"-- End \"sysfs_device\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"class_device\" FFI interface\n"
+"-- Start \"sysfs_class_device\" FFI interface\n"
 "-- method: open\n"
-"function _pub.class_device.open(classname, name)\n"
+"function _pub.sysfs_class_device.open(classname, name)\n"
 "  local classname_len = #classname\n"
 "  local name_len = #name\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_class_device(classname, name)\n"
-"  return obj_type_class_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_class_device_push(self, this_flags)\n"
 "end\n"
-"register_default_constructor(_pub,\"class_device\",_pub.class_device.open)\n"
+"register_default_constructor(_pub,\"sysfs_class_device\",_pub.sysfs_class_device.open)\n"
 "\n"
 "-- method: open_path\n"
-"function _pub.class_device.open_path(path)\n"
+"function _pub.sysfs_class_device.open_path(path)\n"
 "  local path_len = #path\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_class_device_path(path)\n"
-"  return obj_type_class_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_class_device_push(self, this_flags)\n"
 "end\n"
 "\n"
 "-- method: get_parent\n"
-"function _pub.class_device.get_parent(clsdev)\n"
+"function _pub.sysfs_class_device.get_parent(clsdev)\n"
 "  \n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_get_classdev_parent(clsdev)\n"
-"  return obj_type_class_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_class_device_push(self, this_flags)\n"
 "end\n"
 "\n"
 "-- method: get\n"
-"function _pub.class_device.get(class, name)\n"
+"function _pub.sysfs_class_device.get(class, name)\n"
 "  \n"
 "  local name_len = #name\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_get_class_device(class, name)\n"
-"  return obj_type_class_device_push(self, this_flags)\n"
+"  return obj_type_sysfs_class_device_push(self, this_flags)\n"
 "end\n"
 "\n"
 "-- method: close\n"
-"function _meth.class_device.close(self)\n"
-"  local self,this_flags = obj_type_class_device_delete(self)\n"
+"function _meth.sysfs_class_device.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_class_device_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_class_device(self)\n"
 "  return \n"
 "end\n"
-"_priv.class_device.__gc = _meth.class_device.close\n"
+"_priv.sysfs_class_device.__gc = _meth.sysfs_class_device.close\n"
+"\n"
+"-- method: get_device\n"
+"function _meth.sysfs_class_device.get_device(self)\n"
+"  \n"
+"  local rc_sysfs_get_classdev_device\n"
+"  rc_sysfs_get_classdev_device = C.sysfs_get_classdev_device(self)\n"
+"  return obj_type_sysfs_device_push(rc_sysfs_get_classdev_device, 0)\n"
+"end\n"
 "\n"
 "-- method: get_attribute\n"
-"function _meth.class_device.get_attribute(self, name)\n"
+"function _meth.sysfs_class_device.get_attribute(self, name)\n"
 "  \n"
 "  local name_len = #name\n"
 "  local rc_sysfs_get_classdev_attr\n"
 "  rc_sysfs_get_classdev_attr = C.sysfs_get_classdev_attr(self, name)\n"
-"  return obj_type_attribute_push(rc_sysfs_get_classdev_attr, 0)\n"
+"  return obj_type_sysfs_attribute_push(rc_sysfs_get_classdev_attr, 0)\n"
 "end\n"
 "\n"
 "-- method: get_attributes\n"
-"function _meth.class_device.get_attributes(self)\n"
+"function _meth.sysfs_class_device.get_attributes(self)\n"
 "  \n"
 "  local rc_sysfs_get_classdev_attributes\n"
 "  rc_sysfs_get_classdev_attributes = C.sysfs_get_classdev_attributes(self)\n"
 "  return obj_type_dlist_push(rc_sysfs_get_classdev_attributes, 0)\n"
 "end\n"
 "\n"
-"_push.class_device = obj_type_class_device_push\n"
-"ffi.metatype(\"class_device\", _priv.class_device)\n"
-"-- End \"class_device\" FFI interface\n"
+"-- End \"sysfs_class_device\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"class\" FFI interface\n"
+"-- Start \"sysfs_class\" FFI interface\n"
 "-- method: open\n"
-"function _pub.class.open(name)\n"
+"function _pub.sysfs_class.open(name)\n"
 "  local name_len = #name\n"
 "  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_class(name)\n"
-"  return obj_type_class_push(self, this_flags)\n"
+"  return obj_type_sysfs_class_push(self, this_flags)\n"
 "end\n"
-"register_default_constructor(_pub,\"class\",_pub.class.open)\n"
+"register_default_constructor(_pub,\"sysfs_class\",_pub.sysfs_class.open)\n"
 "\n"
 "-- method: close\n"
-"function _meth.class.close(self)\n"
-"  local self,this_flags = obj_type_class_delete(self)\n"
+"function _meth.sysfs_class.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_class_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_class(self)\n"
 "  return \n"
 "end\n"
-"_priv.class.__gc = _meth.class.close\n"
+"_priv.sysfs_class.__gc = _meth.sysfs_class.close\n"
 "\n"
 "-- method: get_devices\n"
-"function _meth.class.get_devices(self)\n"
+"function _meth.sysfs_class.get_devices(self)\n"
 "  \n"
 "  local rc_sysfs_get_class_devices\n"
 "  rc_sysfs_get_class_devices = C.sysfs_get_class_devices(self)\n"
 "  return obj_type_dlist_push(rc_sysfs_get_class_devices, 0)\n"
 "end\n"
 "\n"
-"_push.class = obj_type_class_push\n"
-"ffi.metatype(\"class\", _priv.class)\n"
-"-- End \"class\" FFI interface\n"
+"-- End \"sysfs_class\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"bus\" FFI interface\n"
+"-- Start \"sysfs_bus\" FFI interface\n"
 "-- method: open\n"
-"function _pub.bus.open(name)\n"
+"function _pub.sysfs_bus.open(name)\n"
 "  local name_len = #name\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_bus(name)\n"
-"  return obj_type_bus_push(self)\n"
+"  return obj_type_sysfs_bus_push(self, this_flags)\n"
 "end\n"
-"register_default_constructor(_pub,\"bus\",_pub.bus.open)\n"
+"register_default_constructor(_pub,\"sysfs_bus\",_pub.sysfs_bus.open)\n"
 "\n"
 "-- method: close\n"
-"function _meth.bus.close(self)\n"
-"  local self = obj_type_bus_delete(self)\n"
+"function _meth.sysfs_bus.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_bus_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_bus(self)\n"
 "  return \n"
 "end\n"
-"_priv.bus.__gc = _meth.bus.close\n"
+"_priv.sysfs_bus.__gc = _meth.sysfs_bus.close\n"
 "\n"
-"_push.bus = obj_type_bus_push\n"
-"ffi.metatype(\"bus_t\", _priv.bus)\n"
-"-- End \"bus\" FFI interface\n"
+"-- End \"sysfs_bus\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"driver\" FFI interface\n"
+"-- Start \"sysfs_driver\" FFI interface\n"
 "-- method: open\n"
-"function _pub.driver.open(bus_name, drv_name)\n"
+"function _pub.sysfs_driver.open(bus_name, drv_name)\n"
 "  local bus_name_len = #bus_name\n"
 "  local drv_name_len = #drv_name\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_driver(bus_name, drv_name)\n"
-"  return obj_type_driver_push(self)\n"
+"  return obj_type_sysfs_driver_push(self, this_flags)\n"
 "end\n"
-"register_default_constructor(_pub,\"driver\",_pub.driver.open)\n"
+"register_default_constructor(_pub,\"sysfs_driver\",_pub.sysfs_driver.open)\n"
 "\n"
 "-- method: close\n"
-"function _meth.driver.close(self)\n"
-"  local self = obj_type_driver_delete(self)\n"
+"function _meth.sysfs_driver.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_driver_delete(self)\n"
 "  if not self then return end\n"
 "  C.sysfs_close_driver(self)\n"
 "  return \n"
 "end\n"
-"_priv.driver.__gc = _meth.driver.close\n"
+"_priv.sysfs_driver.__gc = _meth.sysfs_driver.close\n"
 "\n"
 "-- method: open_path\n"
-"function _pub.driver.open_path(path)\n"
+"function _pub.sysfs_driver.open_path(path)\n"
 "  local path_len = #path\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.sysfs_open_driver_path(path)\n"
-"  return obj_type_driver_push(self)\n"
+"  return obj_type_sysfs_driver_push(self, this_flags)\n"
 "end\n"
 "\n"
-"_push.driver = obj_type_driver_push\n"
-"ffi.metatype(\"driver_t\", _priv.driver)\n"
-"-- End \"driver\" FFI interface\n"
+"-- method: get_attr\n"
+"function _meth.sysfs_driver.get_attr(self, name)\n"
+"  \n"
+"  local name_len = #name\n"
+"  local rc_sysfs_get_driver_attr\n"
+"  rc_sysfs_get_driver_attr = C.sysfs_get_driver_attr(self, name)\n"
+"  return obj_type_sysfs_attribute_push(rc_sysfs_get_driver_attr, 0)\n"
+"end\n"
+"\n"
+"-- End \"sysfs_driver\" FFI interface\n"
 "\n", NULL };
+
+static int class_device_iter (lua_State *L) {
+	struct dlist *clsdevlist = lua_touserdata(L, lua_upvalueindex(1));
+	struct sysfs_class_device *obj;
+
+	/* TODO: clarify the flag types
+	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
+	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
+	 */
+	int obj_flags = 0;
+
+	if ((obj = dlist_next(clsdevlist)) != NULL) {
+		obj_type_sysfs_class_device_push(L, obj, obj_flags);
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+
+/* internal sysfs attribute iterator function */
+static int lua_sysfs_attribute_iterator(lua_State *L) {
+	struct dlist *list = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
+	struct sysfs_device *obj;
+
+	/* TODO: clarify the flag types
+	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
+	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
+	 */
+	int obj_flags = 0;
+
+	if ((obj = dlist_next(list)) != NULL) {
+		obj_type_sysfs_attribute_push(L, obj, obj_flags);
+		return 1;
+	}
+
+	return 0;
+}
+
 
 /* internal sysfs device iterator function */
 static int lua_sysfs_device_iterator(lua_State *L) {
@@ -2494,30 +2549,11 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 	int obj_flags = 0;
 
 	if ((obj = dlist_next(list)) != NULL) {
-		obj_type_device_push(L, obj, obj_flags);
+		obj_type_sysfs_device_push(L, obj, obj_flags);
 		return 1;
-	} else {
-		return 0;
 	}
-}
-	
 
-static int class_device_iter (lua_State *L) {
-	struct dlist *clsdevlist = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_class_device *obj;
-
-	/* TODO: clarify the flag types
-	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
-	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
-	 */
-	int obj_flags = 0;
-
-	if ((obj = dlist_next(clsdevlist)) != NULL) {
-		obj_type_class_device_push(L, obj, obj_flags);
-		return 1;
-	} else {
-		return 0;
-	}
+	return 0;
 }
 
 
@@ -2539,110 +2575,169 @@ static int sysfs__get_mnt_path__func(lua_State *L) {
 }
 
 /* method: open */
-static int attribute__open__meth(lua_State *L) {
+static int sysfs_attribute__open__meth(lua_State *L) {
   size_t path_len;
   const char * path;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  attribute * this;
+  sysfs_attribute * this;
   path = luaL_checklstring(L,1,&(path_len));
   this = sysfs_open_attribute(path);
-  obj_type_attribute_push(L, this, this_flags);
+  obj_type_sysfs_attribute_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close */
-static int attribute__close__meth(lua_State *L) {
+static int sysfs_attribute__close__meth(lua_State *L) {
   int this_flags = 0;
-  attribute * this;
-  this = obj_type_attribute_delete(L,1,&(this_flags));
+  sysfs_attribute * this;
+  this = obj_type_sysfs_attribute_delete(L,1,&(this_flags));
   if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_attribute(this);
   return 0;
 }
 
+/* method: get_name */
+static int sysfs_attribute__get_name__meth(lua_State *L) {
+  sysfs_attribute * this;
+  this = obj_type_sysfs_attribute_check(L,1);
+  lua_pushstring(L, this->name);
+  return 1;
+
+  return 0;
+}
+
+/* method: get_path */
+static int sysfs_attribute__get_path__meth(lua_State *L) {
+  sysfs_attribute * this;
+  this = obj_type_sysfs_attribute_check(L,1);
+  lua_pushstring(L, this->path);
+  return 1;
+
+  return 0;
+}
+
+/* method: get_value */
+static int sysfs_attribute__get_value__meth(lua_State *L) {
+  sysfs_attribute * this;
+  this = obj_type_sysfs_attribute_check(L,1);
+  lua_pushstring(L, this->value);
+  return 1;
+
+  return 0;
+}
+
 /* method: open */
-static int device__open__meth(lua_State *L) {
+static int sysfs_device__open__meth(lua_State *L) {
   size_t bus_len;
   const char * bus;
   size_t bus_id_len;
   const char * bus_id;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  device * this;
+  sysfs_device * this;
   bus = luaL_checklstring(L,1,&(bus_len));
   bus_id = luaL_checklstring(L,2,&(bus_id_len));
   this = sysfs_open_device(bus, bus_id);
-  obj_type_device_push(L, this, this_flags);
+  obj_type_sysfs_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close */
-static int device__close__meth(lua_State *L) {
+static int sysfs_device__close__meth(lua_State *L) {
   int this_flags = 0;
-  device * this;
-  this = obj_type_device_delete(L,1,&(this_flags));
+  sysfs_device * this;
+  this = obj_type_sysfs_device_delete(L,1,&(this_flags));
   if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_device(this);
   return 0;
 }
 
 /* method: open_tree */
-static int device__open_tree__meth(lua_State *L) {
+static int sysfs_device__open_tree__meth(lua_State *L) {
   size_t path_len;
   const char * path;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  device * this;
+  sysfs_device * this;
   path = luaL_checklstring(L,1,&(path_len));
   this = sysfs_open_device_tree(path);
-  obj_type_device_push(L, this, this_flags);
+  obj_type_sysfs_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close_tree */
-static int device__close_tree__meth(lua_State *L) {
+static int sysfs_device__close_tree__meth(lua_State *L) {
   int this_flags = 0;
-  device * this;
-  this = obj_type_device_delete(L,1,&(this_flags));
+  sysfs_device * this;
+  this = obj_type_sysfs_device_delete(L,1,&(this_flags));
   if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_device_tree(this);
   return 0;
 }
 
 /* method: open_path */
-static int device__open_path__meth(lua_State *L) {
+static int sysfs_device__open_path__meth(lua_State *L) {
   size_t path_len;
   const char * path;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  device * this;
+  sysfs_device * this;
   path = luaL_checklstring(L,1,&(path_len));
   this = sysfs_open_device_path(path);
-  obj_type_device_push(L, this, this_flags);
+  obj_type_sysfs_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: get_parent */
-static int device__get_parent__meth(lua_State *L) {
-  device * this;
-  device * rc_sysfs_get_device_parent;
-  this = obj_type_device_check(L,1);
+static int sysfs_device__get_parent__meth(lua_State *L) {
+  sysfs_device * this;
+  sysfs_device * rc_sysfs_get_device_parent;
+  this = obj_type_sysfs_device_check(L,1);
   rc_sysfs_get_device_parent = sysfs_get_device_parent(this);
-  obj_type_device_push(L, rc_sysfs_get_device_parent, 0);
+  obj_type_sysfs_device_push(L, rc_sysfs_get_device_parent, 0);
   return 1;
 }
 
 /* method: get_bus */
-static int device__get_bus__meth(lua_State *L) {
-  device * this;
+static int sysfs_device__get_bus__meth(lua_State *L) {
+  sysfs_device * this;
   int rc_sysfs_get_device_bus = 0;
-  this = obj_type_device_check(L,1);
+  this = obj_type_sysfs_device_check(L,1);
   rc_sysfs_get_device_bus = sysfs_get_device_bus(this);
   lua_pushinteger(L, rc_sysfs_get_device_bus);
   return 1;
 }
 
+/* method: get_attr */
+static int sysfs_device__get_attr__meth(lua_State *L) {
+  sysfs_device * this;
+  size_t name_len;
+  const char * name;
+  sysfs_attribute * rc_sysfs_get_device_attr;
+  this = obj_type_sysfs_device_check(L,1);
+  name = luaL_checklstring(L,2,&(name_len));
+  rc_sysfs_get_device_attr = sysfs_get_device_attr(this, name);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_device_attr, 0);
+  return 1;
+}
+
+/* method: get_attributes */
+static int sysfs_device__get_attributes__meth(lua_State *L) {
+  sysfs_device * this;
+  this = obj_type_sysfs_device_check(L,1);
+  struct dlist *list = sysfs_get_device_attributes(this);
+
+  if (list) {
+		dlist_start(list);
+		lua_pushlightuserdata(L, list);
+		lua_pushcclosure(L, lua_sysfs_attribute_iterator, 1);
+		return 1;
+  }
+
+  return 0;
+}
+
 /* method: get_name */
-static int device__get_name__meth(lua_State *L) {
-  device * this;
-  this = obj_type_device_check(L,1);
+static int sysfs_device__get_name__meth(lua_State *L) {
+  sysfs_device * this;
+  this = obj_type_sysfs_device_check(L,1);
   lua_pushstring(L, this->name);
   return 1;
 		
@@ -2650,9 +2745,9 @@ static int device__get_name__meth(lua_State *L) {
 }
 
 /* method: get_path */
-static int device__get_path__meth(lua_State *L) {
-  device * this;
-  this = obj_type_device_check(L,1);
+static int sysfs_device__get_path__meth(lua_State *L) {
+  sysfs_device * this;
+  this = obj_type_sysfs_device_check(L,1);
   lua_pushstring(L, this->path);
   return 1;
 		
@@ -2660,9 +2755,9 @@ static int device__get_path__meth(lua_State *L) {
 }
 
 /* method: get_bus_id */
-static int device__get_bus_id__meth(lua_State *L) {
-  device * this;
-  this = obj_type_device_check(L,1);
+static int sysfs_device__get_bus_id__meth(lua_State *L) {
+  sysfs_device * this;
+  this = obj_type_sysfs_device_check(L,1);
   lua_pushstring(L, this->bus_id);
   return 1;
 		
@@ -2670,9 +2765,9 @@ static int device__get_bus_id__meth(lua_State *L) {
 }
 
 /* method: get_driver_name */
-static int device__get_driver_name__meth(lua_State *L) {
-  device * this;
-  this = obj_type_device_check(L,1);
+static int sysfs_device__get_driver_name__meth(lua_State *L) {
+  sysfs_device * this;
+  this = obj_type_sysfs_device_check(L,1);
   lua_pushstring(L, this->driver_name);
   return 1;
 		
@@ -2680,9 +2775,9 @@ static int device__get_driver_name__meth(lua_State *L) {
 }
 
 /* method: get_subsystem */
-static int device__get_subsystem__meth(lua_State *L) {
-  device * this;
-  this = obj_type_device_check(L,1);
+static int sysfs_device__get_subsystem__meth(lua_State *L) {
+  sysfs_device * this;
+  this = obj_type_sysfs_device_check(L,1);
   lua_pushstring(L, this->subsystem);
   return 1;
 		
@@ -2690,71 +2785,81 @@ static int device__get_subsystem__meth(lua_State *L) {
 }
 
 /* method: open */
-static int class_device__open__meth(lua_State *L) {
+static int sysfs_class_device__open__meth(lua_State *L) {
   size_t classname_len;
   const char * classname;
   size_t name_len;
   const char * name;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  class_device * this;
+  sysfs_class_device * this;
   classname = luaL_checklstring(L,1,&(classname_len));
   name = luaL_checklstring(L,2,&(name_len));
   this = sysfs_open_class_device(classname, name);
-  obj_type_class_device_push(L, this, this_flags);
+  obj_type_sysfs_class_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: open_path */
-static int class_device__open_path__meth(lua_State *L) {
+static int sysfs_class_device__open_path__meth(lua_State *L) {
   size_t path_len;
   const char * path;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  class_device * this;
+  sysfs_class_device * this;
   path = luaL_checklstring(L,1,&(path_len));
   this = sysfs_open_class_device_path(path);
-  obj_type_class_device_push(L, this, this_flags);
+  obj_type_sysfs_class_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: get_parent */
-static int class_device__get_parent__meth(lua_State *L) {
-  class_device * clsdev;
+static int sysfs_class_device__get_parent__meth(lua_State *L) {
+  sysfs_class_device * clsdev;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  class_device * this;
-  clsdev = obj_type_class_device_check(L,1);
+  sysfs_class_device * this;
+  clsdev = obj_type_sysfs_class_device_check(L,1);
   this = sysfs_get_classdev_parent(clsdev);
-  obj_type_class_device_push(L, this, this_flags);
+  obj_type_sysfs_class_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: get */
-static int class_device__get__meth(lua_State *L) {
-  class * class;
+static int sysfs_class_device__get__meth(lua_State *L) {
+  sysfs_class * class;
   size_t name_len;
   const char * name;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  class_device * this;
-  class = obj_type_class_check(L,1);
+  sysfs_class_device * this;
+  class = obj_type_sysfs_class_check(L,1);
   name = luaL_checklstring(L,2,&(name_len));
   this = sysfs_get_class_device(class, name);
-  obj_type_class_device_push(L, this, this_flags);
+  obj_type_sysfs_class_device_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close */
-static int class_device__close__meth(lua_State *L) {
+static int sysfs_class_device__close__meth(lua_State *L) {
   int this_flags = 0;
-  class_device * this;
-  this = obj_type_class_device_delete(L,1,&(this_flags));
+  sysfs_class_device * this;
+  this = obj_type_sysfs_class_device_delete(L,1,&(this_flags));
   if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_class_device(this);
   return 0;
 }
 
+/* method: get_device */
+static int sysfs_class_device__get_device__meth(lua_State *L) {
+  sysfs_class_device * this;
+  sysfs_device * rc_sysfs_get_classdev_device;
+  this = obj_type_sysfs_class_device_check(L,1);
+  rc_sysfs_get_classdev_device = sysfs_get_classdev_device(this);
+  obj_type_sysfs_device_push(L, rc_sysfs_get_classdev_device, 0);
+  return 1;
+}
+
 /* method: get_name */
-static int class_device__get_name__meth(lua_State *L) {
-  class_device * this;
-  this = obj_type_class_device_check(L,1);
+static int sysfs_class_device__get_name__meth(lua_State *L) {
+  sysfs_class_device * this;
+  this = obj_type_sysfs_class_device_check(L,1);
   lua_pushstring(L, this->name);
   return 1;
 		
@@ -2762,9 +2867,9 @@ static int class_device__get_name__meth(lua_State *L) {
 }
 
 /* method: get_path */
-static int class_device__get_path__meth(lua_State *L) {
-  class_device * this;
-  this = obj_type_class_device_check(L,1);
+static int sysfs_class_device__get_path__meth(lua_State *L) {
+  sysfs_class_device * this;
+  this = obj_type_sysfs_class_device_check(L,1);
   lua_pushstring(L, this->path);
   return 1;
 		
@@ -2772,9 +2877,9 @@ static int class_device__get_path__meth(lua_State *L) {
 }
 
 /* method: get_classname */
-static int class_device__get_classname__meth(lua_State *L) {
-  class_device * this;
-  this = obj_type_class_device_check(L,1);
+static int sysfs_class_device__get_classname__meth(lua_State *L) {
+  sysfs_class_device * this;
+  this = obj_type_sysfs_class_device_check(L,1);
   lua_pushstring(L, this->classname);
   return 1;
 		
@@ -2782,67 +2887,65 @@ static int class_device__get_classname__meth(lua_State *L) {
 }
 
 /* method: get_attribute */
-static int class_device__get_attribute__meth(lua_State *L) {
-  class_device * this;
+static int sysfs_class_device__get_attribute__meth(lua_State *L) {
+  sysfs_class_device * this;
   size_t name_len;
   const char * name;
-  attribute * rc_sysfs_get_classdev_attr;
-  this = obj_type_class_device_check(L,1);
+  sysfs_attribute * rc_sysfs_get_classdev_attr;
+  this = obj_type_sysfs_class_device_check(L,1);
   name = luaL_checklstring(L,2,&(name_len));
   rc_sysfs_get_classdev_attr = sysfs_get_classdev_attr(this, name);
-  obj_type_attribute_push(L, rc_sysfs_get_classdev_attr, 0);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_classdev_attr, 0);
   return 1;
 }
 
 /* method: get_attributes */
-static int class_device__get_attributes__meth(lua_State *L) {
-  class_device * this;
+static int sysfs_class_device__get_attributes__meth(lua_State *L) {
+  sysfs_class_device * this;
   dlist * rc_sysfs_get_classdev_attributes;
-  this = obj_type_class_device_check(L,1);
+  this = obj_type_sysfs_class_device_check(L,1);
   rc_sysfs_get_classdev_attributes = sysfs_get_classdev_attributes(this);
   obj_type_dlist_push(L, rc_sysfs_get_classdev_attributes, 0);
   return 1;
 }
 
 /* method: open */
-static int class__open__meth(lua_State *L) {
+static int sysfs_class__open__meth(lua_State *L) {
   size_t name_len;
   const char * name;
   int this_flags = OBJ_UDATA_FLAG_OWN;
-  class * this;
+  sysfs_class * this;
   name = luaL_checklstring(L,1,&(name_len));
   this = sysfs_open_class(name);
-  obj_type_class_push(L, this, this_flags);
+  obj_type_sysfs_class_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close */
-static int class__close__meth(lua_State *L) {
+static int sysfs_class__close__meth(lua_State *L) {
   int this_flags = 0;
-  class * this;
-  this = obj_type_class_delete(L,1,&(this_flags));
+  sysfs_class * this;
+  this = obj_type_sysfs_class_delete(L,1,&(this_flags));
   if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_class(this);
   return 0;
 }
 
 /* method: get_devices */
-static int class__get_devices__meth(lua_State *L) {
-  class * this;
+static int sysfs_class__get_devices__meth(lua_State *L) {
+  sysfs_class * this;
   dlist * rc_sysfs_get_class_devices;
-  this = obj_type_class_check(L,1);
+  this = obj_type_sysfs_class_check(L,1);
   rc_sysfs_get_class_devices = sysfs_get_class_devices(this);
   obj_type_dlist_push(L, rc_sysfs_get_class_devices, 0);
   return 1;
 }
 
 /* method: get_class_devices */
-static int class__get_class_devices__meth(lua_State *L) {
-  class * this;
-  this = obj_type_class_check(L,1);
-  struct dlist *clsdevlist;
-
-  clsdevlist = sysfs_get_class_devices(this);
+static int sysfs_class__get_class_devices__meth(lua_State *L) {
+  sysfs_class * this;
+  this = obj_type_sysfs_class_check(L,1);
+  struct dlist *clsdevlist = sysfs_get_class_devices(this);
 
   if (clsdevlist) {
 		dlist_start(clsdevlist);
@@ -2855,28 +2958,31 @@ static int class__get_class_devices__meth(lua_State *L) {
 }
 
 /* method: open */
-static int bus__open__meth(lua_State *L) {
+static int sysfs_bus__open__meth(lua_State *L) {
   size_t name_len;
   const char * name;
-  bus * this;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  sysfs_bus * this;
   name = luaL_checklstring(L,1,&(name_len));
   this = sysfs_open_bus(name);
-  obj_type_bus_push(L, this);
+  obj_type_sysfs_bus_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close */
-static int bus__close__meth(lua_State *L) {
-  bus * this;
-  this = obj_type_bus_delete(L,1);
+static int sysfs_bus__close__meth(lua_State *L) {
+  int this_flags = 0;
+  sysfs_bus * this;
+  this = obj_type_sysfs_bus_delete(L,1,&(this_flags));
+  if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_bus(this);
   return 0;
 }
 
 /* method: get_devices */
-static int bus__get_devices__meth(lua_State *L) {
-  bus * this;
-  this = obj_type_bus_check(L,1);
+static int sysfs_bus__get_devices__meth(lua_State *L) {
+  sysfs_bus * this;
+  this = obj_type_sysfs_bus_check(L,1);
   struct dlist *list;
 
   list = sysfs_get_bus_devices(this);
@@ -2892,42 +2998,59 @@ static int bus__get_devices__meth(lua_State *L) {
 }
 
 /* method: open */
-static int driver__open__meth(lua_State *L) {
+static int sysfs_driver__open__meth(lua_State *L) {
   size_t bus_name_len;
   const char * bus_name;
   size_t drv_name_len;
   const char * drv_name;
-  driver * this;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  sysfs_driver * this;
   bus_name = luaL_checklstring(L,1,&(bus_name_len));
   drv_name = luaL_checklstring(L,2,&(drv_name_len));
   this = sysfs_open_driver(bus_name, drv_name);
-  obj_type_driver_push(L, this);
+  obj_type_sysfs_driver_push(L, this, this_flags);
   return 1;
 }
 
 /* method: close */
-static int driver__close__meth(lua_State *L) {
-  driver * this;
-  this = obj_type_driver_delete(L,1);
+static int sysfs_driver__close__meth(lua_State *L) {
+  int this_flags = 0;
+  sysfs_driver * this;
+  this = obj_type_sysfs_driver_delete(L,1,&(this_flags));
+  if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
   sysfs_close_driver(this);
   return 0;
 }
 
 /* method: open_path */
-static int driver__open_path__meth(lua_State *L) {
+static int sysfs_driver__open_path__meth(lua_State *L) {
   size_t path_len;
   const char * path;
-  driver * this;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  sysfs_driver * this;
   path = luaL_checklstring(L,1,&(path_len));
   this = sysfs_open_driver_path(path);
-  obj_type_driver_push(L, this);
+  obj_type_sysfs_driver_push(L, this, this_flags);
+  return 1;
+}
+
+/* method: get_attr */
+static int sysfs_driver__get_attr__meth(lua_State *L) {
+  sysfs_driver * this;
+  size_t name_len;
+  const char * name;
+  sysfs_attribute * rc_sysfs_get_driver_attr;
+  this = obj_type_sysfs_driver_check(L,1);
+  name = luaL_checklstring(L,2,&(name_len));
+  rc_sysfs_get_driver_attr = sysfs_get_driver_attr(this, name);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_driver_attr, 0);
   return 1;
 }
 
 /* method: get_devices */
-static int driver__get_devices__meth(lua_State *L) {
-  driver * this;
-  this = obj_type_driver_check(L,1);
+static int sysfs_driver__get_devices__meth(lua_State *L) {
+  sysfs_driver * this;
+  this = obj_type_sysfs_driver_check(L,1);
   struct dlist *list = sysfs_get_driver_devices(this);
 
   if (list) {
@@ -2941,9 +3064,9 @@ static int driver__get_devices__meth(lua_State *L) {
 }
 
 /* method: get_name */
-static int driver__get_name__meth(lua_State *L) {
-  driver * this;
-  this = obj_type_driver_check(L,1);
+static int sysfs_driver__get_name__meth(lua_State *L) {
+  sysfs_driver * this;
+  this = obj_type_sysfs_driver_check(L,1);
   lua_pushstring(L, this->name);
   return 1;
                 
@@ -2951,9 +3074,9 @@ static int driver__get_name__meth(lua_State *L) {
 }
 
 /* method: get_path */
-static int driver__get_path__meth(lua_State *L) {
-  driver * this;
-  this = obj_type_driver_check(L,1);
+static int sysfs_driver__get_path__meth(lua_State *L) {
+  sysfs_driver * this;
+  this = obj_type_sysfs_driver_check(L,1);
   lua_pushstring(L, this->path);
   return 1;
                 
@@ -2992,227 +3115,234 @@ static const reg_impl obj_dlist_implements[] = {
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_attribute_pub_funcs[] = {
-  {"open", attribute__open__meth},
+static const luaL_Reg obj_sysfs_attribute_pub_funcs[] = {
+  {"open", sysfs_attribute__open__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_attribute_methods[] = {
-  {"close", attribute__close__meth},
+static const luaL_Reg obj_sysfs_attribute_methods[] = {
+  {"close", sysfs_attribute__close__meth},
+  {"get_name", sysfs_attribute__get_name__meth},
+  {"get_path", sysfs_attribute__get_path__meth},
+  {"get_value", sysfs_attribute__get_value__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_attribute_metas[] = {
-  {"__gc", attribute__close__meth},
+static const luaL_Reg obj_sysfs_attribute_metas[] = {
+  {"__gc", sysfs_attribute__close__meth},
   {"__tostring", obj_udata_default_tostring},
   {"__eq", obj_udata_default_equal},
   {NULL, NULL}
 };
 
-static const obj_base obj_attribute_bases[] = {
+static const obj_base obj_sysfs_attribute_bases[] = {
   {-1, NULL}
 };
 
-static const obj_field obj_attribute_fields[] = {
+static const obj_field obj_sysfs_attribute_fields[] = {
   {NULL, 0, 0, 0}
 };
 
-static const obj_const obj_attribute_constants[] = {
+static const obj_const obj_sysfs_attribute_constants[] = {
   {NULL, NULL, 0.0 , 0}
 };
 
-static const reg_impl obj_attribute_implements[] = {
+static const reg_impl obj_sysfs_attribute_implements[] = {
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_device_pub_funcs[] = {
-  {"open", device__open__meth},
-  {"open_tree", device__open_tree__meth},
-  {"open_path", device__open_path__meth},
+static const luaL_Reg obj_sysfs_device_pub_funcs[] = {
+  {"open", sysfs_device__open__meth},
+  {"open_tree", sysfs_device__open_tree__meth},
+  {"open_path", sysfs_device__open_path__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_device_methods[] = {
-  {"close", device__close__meth},
-  {"close_tree", device__close_tree__meth},
-  {"get_parent", device__get_parent__meth},
-  {"get_bus", device__get_bus__meth},
-  {"get_name", device__get_name__meth},
-  {"get_path", device__get_path__meth},
-  {"get_bus_id", device__get_bus_id__meth},
-  {"get_driver_name", device__get_driver_name__meth},
-  {"get_subsystem", device__get_subsystem__meth},
+static const luaL_Reg obj_sysfs_device_methods[] = {
+  {"close", sysfs_device__close__meth},
+  {"close_tree", sysfs_device__close_tree__meth},
+  {"get_parent", sysfs_device__get_parent__meth},
+  {"get_bus", sysfs_device__get_bus__meth},
+  {"get_attr", sysfs_device__get_attr__meth},
+  {"get_attributes", sysfs_device__get_attributes__meth},
+  {"get_name", sysfs_device__get_name__meth},
+  {"get_path", sysfs_device__get_path__meth},
+  {"get_bus_id", sysfs_device__get_bus_id__meth},
+  {"get_driver_name", sysfs_device__get_driver_name__meth},
+  {"get_subsystem", sysfs_device__get_subsystem__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_device_metas[] = {
-  {"__gc", device__close__meth},
-  {"__gc", device__close_tree__meth},
+static const luaL_Reg obj_sysfs_device_metas[] = {
+  {"__gc", sysfs_device__close__meth},
+  {"__gc", sysfs_device__close_tree__meth},
   {"__tostring", obj_udata_default_tostring},
   {"__eq", obj_udata_default_equal},
   {NULL, NULL}
 };
 
-static const obj_base obj_device_bases[] = {
+static const obj_base obj_sysfs_device_bases[] = {
   {-1, NULL}
 };
 
-static const obj_field obj_device_fields[] = {
+static const obj_field obj_sysfs_device_fields[] = {
   {NULL, 0, 0, 0}
 };
 
-static const obj_const obj_device_constants[] = {
+static const obj_const obj_sysfs_device_constants[] = {
   {NULL, NULL, 0.0 , 0}
 };
 
-static const reg_impl obj_device_implements[] = {
+static const reg_impl obj_sysfs_device_implements[] = {
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_class_device_pub_funcs[] = {
-  {"open", class_device__open__meth},
-  {"open_path", class_device__open_path__meth},
-  {"get_parent", class_device__get_parent__meth},
-  {"get", class_device__get__meth},
+static const luaL_Reg obj_sysfs_class_device_pub_funcs[] = {
+  {"open", sysfs_class_device__open__meth},
+  {"open_path", sysfs_class_device__open_path__meth},
+  {"get_parent", sysfs_class_device__get_parent__meth},
+  {"get", sysfs_class_device__get__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_class_device_methods[] = {
-  {"close", class_device__close__meth},
-  {"get_name", class_device__get_name__meth},
-  {"get_path", class_device__get_path__meth},
-  {"get_classname", class_device__get_classname__meth},
-  {"get_attribute", class_device__get_attribute__meth},
-  {"get_attributes", class_device__get_attributes__meth},
+static const luaL_Reg obj_sysfs_class_device_methods[] = {
+  {"close", sysfs_class_device__close__meth},
+  {"get_device", sysfs_class_device__get_device__meth},
+  {"get_name", sysfs_class_device__get_name__meth},
+  {"get_path", sysfs_class_device__get_path__meth},
+  {"get_classname", sysfs_class_device__get_classname__meth},
+  {"get_attribute", sysfs_class_device__get_attribute__meth},
+  {"get_attributes", sysfs_class_device__get_attributes__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_class_device_metas[] = {
-  {"__gc", class_device__close__meth},
+static const luaL_Reg obj_sysfs_class_device_metas[] = {
+  {"__gc", sysfs_class_device__close__meth},
   {"__tostring", obj_udata_default_tostring},
   {"__eq", obj_udata_default_equal},
   {NULL, NULL}
 };
 
-static const obj_base obj_class_device_bases[] = {
+static const obj_base obj_sysfs_class_device_bases[] = {
   {-1, NULL}
 };
 
-static const obj_field obj_class_device_fields[] = {
+static const obj_field obj_sysfs_class_device_fields[] = {
   {NULL, 0, 0, 0}
 };
 
-static const obj_const obj_class_device_constants[] = {
+static const obj_const obj_sysfs_class_device_constants[] = {
   {NULL, NULL, 0.0 , 0}
 };
 
-static const reg_impl obj_class_device_implements[] = {
+static const reg_impl obj_sysfs_class_device_implements[] = {
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_class_pub_funcs[] = {
-  {"open", class__open__meth},
+static const luaL_Reg obj_sysfs_class_pub_funcs[] = {
+  {"open", sysfs_class__open__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_class_methods[] = {
-  {"close", class__close__meth},
-  {"get_devices", class__get_devices__meth},
-  {"get_class_devices", class__get_class_devices__meth},
+static const luaL_Reg obj_sysfs_class_methods[] = {
+  {"close", sysfs_class__close__meth},
+  {"get_devices", sysfs_class__get_devices__meth},
+  {"get_class_devices", sysfs_class__get_class_devices__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_class_metas[] = {
-  {"__gc", class__close__meth},
+static const luaL_Reg obj_sysfs_class_metas[] = {
+  {"__gc", sysfs_class__close__meth},
   {"__tostring", obj_udata_default_tostring},
   {"__eq", obj_udata_default_equal},
   {NULL, NULL}
 };
 
-static const obj_base obj_class_bases[] = {
+static const obj_base obj_sysfs_class_bases[] = {
   {-1, NULL}
 };
 
-static const obj_field obj_class_fields[] = {
+static const obj_field obj_sysfs_class_fields[] = {
   {NULL, 0, 0, 0}
 };
 
-static const obj_const obj_class_constants[] = {
+static const obj_const obj_sysfs_class_constants[] = {
   {NULL, NULL, 0.0 , 0}
 };
 
-static const reg_impl obj_class_implements[] = {
+static const reg_impl obj_sysfs_class_implements[] = {
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_bus_pub_funcs[] = {
-  {"open", bus__open__meth},
+static const luaL_Reg obj_sysfs_bus_pub_funcs[] = {
+  {"open", sysfs_bus__open__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_bus_methods[] = {
-  {"close", bus__close__meth},
-  {"get_devices", bus__get_devices__meth},
+static const luaL_Reg obj_sysfs_bus_methods[] = {
+  {"close", sysfs_bus__close__meth},
+  {"get_devices", sysfs_bus__get_devices__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_bus_metas[] = {
-  {"__gc", bus__close__meth},
-  {"__tostring", obj_simple_udata_default_tostring},
-  {"__eq", obj_simple_udata_default_equal},
+static const luaL_Reg obj_sysfs_bus_metas[] = {
+  {"__gc", sysfs_bus__close__meth},
+  {"__tostring", obj_udata_default_tostring},
+  {"__eq", obj_udata_default_equal},
   {NULL, NULL}
 };
 
-static const obj_base obj_bus_bases[] = {
+static const obj_base obj_sysfs_bus_bases[] = {
   {-1, NULL}
 };
 
-static const obj_field obj_bus_fields[] = {
+static const obj_field obj_sysfs_bus_fields[] = {
   {NULL, 0, 0, 0}
 };
 
-static const obj_const obj_bus_constants[] = {
+static const obj_const obj_sysfs_bus_constants[] = {
   {NULL, NULL, 0.0 , 0}
 };
 
-static const reg_impl obj_bus_implements[] = {
+static const reg_impl obj_sysfs_bus_implements[] = {
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_driver_pub_funcs[] = {
-  {"open", driver__open__meth},
-  {"open_path", driver__open_path__meth},
+static const luaL_Reg obj_sysfs_driver_pub_funcs[] = {
+  {"open", sysfs_driver__open__meth},
+  {"open_path", sysfs_driver__open_path__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_driver_methods[] = {
-  {"close", driver__close__meth},
-  {"get_devices", driver__get_devices__meth},
-  {"get_name", driver__get_name__meth},
-  {"get_path", driver__get_path__meth},
+static const luaL_Reg obj_sysfs_driver_methods[] = {
+  {"close", sysfs_driver__close__meth},
+  {"get_attr", sysfs_driver__get_attr__meth},
+  {"get_devices", sysfs_driver__get_devices__meth},
+  {"get_name", sysfs_driver__get_name__meth},
+  {"get_path", sysfs_driver__get_path__meth},
   {NULL, NULL}
 };
 
-static const luaL_Reg obj_driver_metas[] = {
-  {"__gc", driver__close__meth},
-  {"__tostring", obj_simple_udata_default_tostring},
-  {"__eq", obj_simple_udata_default_equal},
+static const luaL_Reg obj_sysfs_driver_metas[] = {
+  {"__gc", sysfs_driver__close__meth},
+  {"__tostring", obj_udata_default_tostring},
+  {"__eq", obj_udata_default_equal},
   {NULL, NULL}
 };
 
-static const obj_base obj_driver_bases[] = {
+static const obj_base obj_sysfs_driver_bases[] = {
   {-1, NULL}
 };
 
-static const obj_field obj_driver_fields[] = {
+static const obj_field obj_sysfs_driver_fields[] = {
   {NULL, 0, 0, 0}
 };
 
-static const obj_const obj_driver_constants[] = {
+static const obj_const obj_sysfs_driver_constants[] = {
   {NULL, NULL, 0.0 , 0}
 };
 
-static const reg_impl obj_driver_implements[] = {
+static const reg_impl obj_sysfs_driver_implements[] = {
   {NULL, NULL}
 };
 
@@ -3229,12 +3359,12 @@ static const obj_const sysfs_constants[] = {
 
 static const reg_sub_module reg_sub_modules[] = {
   { &(obj_type_dlist), REG_OBJECT, obj_dlist_pub_funcs, obj_dlist_methods, obj_dlist_metas, obj_dlist_bases, obj_dlist_fields, obj_dlist_constants, obj_dlist_implements, 0},
-  { &(obj_type_attribute), REG_OBJECT, obj_attribute_pub_funcs, obj_attribute_methods, obj_attribute_metas, obj_attribute_bases, obj_attribute_fields, obj_attribute_constants, obj_attribute_implements, 0},
-  { &(obj_type_device), REG_OBJECT, obj_device_pub_funcs, obj_device_methods, obj_device_metas, obj_device_bases, obj_device_fields, obj_device_constants, obj_device_implements, 0},
-  { &(obj_type_class_device), REG_OBJECT, obj_class_device_pub_funcs, obj_class_device_methods, obj_class_device_metas, obj_class_device_bases, obj_class_device_fields, obj_class_device_constants, obj_class_device_implements, 0},
-  { &(obj_type_class), REG_OBJECT, obj_class_pub_funcs, obj_class_methods, obj_class_metas, obj_class_bases, obj_class_fields, obj_class_constants, obj_class_implements, 0},
-  { &(obj_type_bus), REG_OBJECT, obj_bus_pub_funcs, obj_bus_methods, obj_bus_metas, obj_bus_bases, obj_bus_fields, obj_bus_constants, obj_bus_implements, 0},
-  { &(obj_type_driver), REG_OBJECT, obj_driver_pub_funcs, obj_driver_methods, obj_driver_metas, obj_driver_bases, obj_driver_fields, obj_driver_constants, obj_driver_implements, 0},
+  { &(obj_type_sysfs_attribute), REG_OBJECT, obj_sysfs_attribute_pub_funcs, obj_sysfs_attribute_methods, obj_sysfs_attribute_metas, obj_sysfs_attribute_bases, obj_sysfs_attribute_fields, obj_sysfs_attribute_constants, obj_sysfs_attribute_implements, 0},
+  { &(obj_type_sysfs_device), REG_OBJECT, obj_sysfs_device_pub_funcs, obj_sysfs_device_methods, obj_sysfs_device_metas, obj_sysfs_device_bases, obj_sysfs_device_fields, obj_sysfs_device_constants, obj_sysfs_device_implements, 0},
+  { &(obj_type_sysfs_class_device), REG_OBJECT, obj_sysfs_class_device_pub_funcs, obj_sysfs_class_device_methods, obj_sysfs_class_device_metas, obj_sysfs_class_device_bases, obj_sysfs_class_device_fields, obj_sysfs_class_device_constants, obj_sysfs_class_device_implements, 0},
+  { &(obj_type_sysfs_class), REG_OBJECT, obj_sysfs_class_pub_funcs, obj_sysfs_class_methods, obj_sysfs_class_metas, obj_sysfs_class_bases, obj_sysfs_class_fields, obj_sysfs_class_constants, obj_sysfs_class_implements, 0},
+  { &(obj_type_sysfs_bus), REG_OBJECT, obj_sysfs_bus_pub_funcs, obj_sysfs_bus_methods, obj_sysfs_bus_metas, obj_sysfs_bus_bases, obj_sysfs_bus_fields, obj_sysfs_bus_constants, obj_sysfs_bus_implements, 0},
+  { &(obj_type_sysfs_driver), REG_OBJECT, obj_sysfs_driver_pub_funcs, obj_sysfs_driver_methods, obj_sysfs_driver_metas, obj_sysfs_driver_bases, obj_sysfs_driver_fields, obj_sysfs_driver_constants, obj_sysfs_driver_implements, 0},
   {NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0}
 };
 
