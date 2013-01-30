@@ -44,4 +44,29 @@ object "sysfs_attribute" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_attribute" {}
 	},
+
+	--
+	-- lua binding specific methods for accessing 'struct sysfs_device' members
+	--
+	-- get name
+	method "get_name" {
+		c_source [[
+  lua_pushstring(L, ${this}->name);
+  return 1;
+]]
+	},
+	-- get path
+	method "get_path" {
+		c_source [[
+  lua_pushstring(L, ${this}->path);
+  return 1;
+]]
+	},
+	-- get value
+	method "get_value" {
+		c_source [[
+  lua_pushstring(L, ${this}->value);
+  return 1;
+]]
+	},
 }
