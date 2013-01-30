@@ -73,7 +73,7 @@ object "sysfs_class_device" {
 		c_method_call "sysfs_device *" "sysfs_get_classdev_device" {}
 	},
 	-- get attribute
-	method "get_attribute" {
+	method "get_attr" {
 		c_method_call "sysfs_attribute *" "sysfs_get_classdev_attr" {
 						"const char *", "name"
 		}
