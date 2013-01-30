@@ -34,6 +34,9 @@ ffi_cdef (typedefs)
 -- attribute
 --
 object "sysfs_attribute" {
+	userdata_type = "generic",
+	no_weak_ref = true,
+
 	-- open
 	constructor "open" {
 		c_call "sysfs_attribute *" "sysfs_open_attribute" {
