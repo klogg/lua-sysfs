@@ -31,6 +31,30 @@ c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
+-- internal functions
+c_source "src" {
+[[
+/* internal sysfs class device iterator function */
+static int lua_sysfs_class_device_iterator(lua_State *L) {
+	struct dlist *clsdevlist = lua_touserdata(L, lua_upvalueindex(1));
+	struct sysfs_class_device *obj;
+
+	/* TODO: clarify the flag types
+	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
+	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
+	 */
+	int obj_flags = 0;
+
+	if ((obj = dlist_next(clsdevlist)) != NULL) {
+		obj_type_sysfs_class_device_push(L, obj, obj_flags);
+		return 1;
+	} else {
+		return 0;
+	}
+}
+]]
+}
+
 --
 -- class device
 --
@@ -131,29 +155,6 @@ object "sysfs_class" {
 	method "get_devices" {
 		c_method_call "dlist *" "sysfs_get_class_devices" {}
 	},
-
-c_source {
-[[
-
-static int lua_sysfs_class_device_iterator (lua_State *L) {
-	struct dlist *clsdevlist = lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_class_device *obj;
-
-	/* TODO: clarify the flag types
-	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
-	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
-	 */
-	int obj_flags = 0;
-
-	if ((obj = dlist_next(clsdevlist)) != NULL) {
-		obj_type_sysfs_class_device_push(L, obj, obj_flags);
-		return 1;
-	} else {
-		return 0;
-	}
-}
-]]
-},
 	-- get a list of devices
 	method "get_class_devices" {
 		c_source [[
