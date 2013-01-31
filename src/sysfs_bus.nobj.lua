@@ -43,6 +43,12 @@ object "sysfs_bus" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_bus" {}
 	},
+	-- get device
+	method "get_device" {
+		c_method_call "sysfs_device *" "sysfs_get_bus_device" {
+						"const char *", "id"
+		}
+	},
 	-- sysfs device iterator
 	method "get_devices" {
 		c_source [[
