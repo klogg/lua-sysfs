@@ -41,7 +41,7 @@ static int lua_sysfs_device_iterator(lua_State *L) {
 }
 
 --
--- device
+-- sysfs device object
 --
 object "sysfs_device" {
 	userdata_type = "generic",
