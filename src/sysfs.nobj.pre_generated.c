@@ -1673,8 +1673,6 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "sysfs_attribute * sysfs_get_classdev_attr(sysfs_class_device *, const char *);\n"
 "\n"
-"dlist * sysfs_get_classdev_attributes(sysfs_class_device *);\n"
-"\n"
 "sysfs_class * sysfs_open_class(const char *);\n"
 "\n"
 "void sysfs_close_class(sysfs_class *);\n"
@@ -1990,10 +1988,10 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "\n"
 "local obj_type_sysfs_class_device_check\n"
-"local obj_type_sysfs_class_device_delete\n", /* ----- CUT ----- */
+"local obj_type_sysfs_class_device_delete\n"
 "local obj_type_sysfs_class_device_push\n"
 "\n"
-"do\n"
+"do\n", /* ----- CUT ----- */
 "	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_class_device\", \"sysfs_class_device *\")\n"
 "\n"
 "	function obj_type_sysfs_class_device_check(ptr)\n"
@@ -2382,21 +2380,13 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "  return obj_type_sysfs_device_push(rc_sysfs_get_classdev_device, 0)\n"
 "end\n"
 "\n"
-"-- method: get_attribute\n"
-"function _meth.sysfs_class_device.get_attribute(self, name)\n"
+"-- method: get_attr\n"
+"function _meth.sysfs_class_device.get_attr(self, name)\n"
 "  \n"
 "  local name_len = #name\n"
 "  local rc_sysfs_get_classdev_attr\n"
 "  rc_sysfs_get_classdev_attr = C.sysfs_get_classdev_attr(self, name)\n"
 "  return obj_type_sysfs_attribute_push(rc_sysfs_get_classdev_attr, 0)\n"
-"end\n"
-"\n"
-"-- method: get_attributes\n"
-"function _meth.sysfs_class_device.get_attributes(self)\n"
-"  \n"
-"  local rc_sysfs_get_classdev_attributes\n"
-"  rc_sysfs_get_classdev_attributes = C.sysfs_get_classdev_attributes(self)\n"
-"  return obj_type_dlist_push(rc_sysfs_get_classdev_attributes, 0)\n"
 "end\n"
 "\n"
 "-- End \"sysfs_class_device\" FFI interface\n"
@@ -2498,62 +2488,40 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "-- End \"sysfs_driver\" FFI interface\n"
 "\n", NULL };
 
-static int class_device_iter (lua_State *L) {
-	struct dlist *clsdevlist = lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_class_device *obj;
-
-	/* TODO: clarify the flag types
-	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
-	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
-	 */
-	int obj_flags = 0;
-
-	if ((obj = dlist_next(clsdevlist)) != NULL) {
-		obj_type_sysfs_class_device_push(L, obj, obj_flags);
-		return 1;
-	} else {
-		return 0;
+/* macro to initialise an iterator */
+#define lua_sysfs_iterator(this, dlist_get, obj_iterator) \
+	struct dlist *list = dlist_get(this); \
+	if (list) { \
+		dlist_start(list); \
+		lua_pushlightuserdata(L, list); \
+		lua_pushcclosure(L, obj_iterator, 1); \
+		return 1; \
 	}
-}
 
+/* macro to run an object specific iterator */
+#define lua_sysfs_iterator_run(obj_type, obj_type_push) \
+	struct dlist *list = lua_touserdata(L, lua_upvalueindex(1)); \
+	struct obj_type *obj; \
+	int obj_flags = 0; \
+	if ((obj = dlist_next(list)) != NULL) { \
+		obj_type_push(L, obj, obj_flags); \
+		return 1; \
+	} \
+	return 0
 
 /* internal sysfs attribute iterator function */
 static int lua_sysfs_attribute_iterator(lua_State *L) {
-	struct dlist *list = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_device *obj;
-
-	/* TODO: clarify the flag types
-	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
-	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
-	 */
-	int obj_flags = 0;
-
-	if ((obj = dlist_next(list)) != NULL) {
-		obj_type_sysfs_attribute_push(L, obj, obj_flags);
-		return 1;
-	}
-
-	return 0;
+	lua_sysfs_iterator_run(sysfs_attribute, obj_type_sysfs_attribute_push);
 }
-
 
 /* internal sysfs device iterator function */
 static int lua_sysfs_device_iterator(lua_State *L) {
-	struct dlist *list = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_device *obj;
+	lua_sysfs_iterator_run(sysfs_device, obj_type_sysfs_device_push);
+}
 
-	/* TODO: clarify the flag types
-	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
-	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
-	 */
-	int obj_flags = 0;
-
-	if ((obj = dlist_next(list)) != NULL) {
-		obj_type_sysfs_device_push(L, obj, obj_flags);
-		return 1;
-	}
-
-	return 0;
+/* internal sysfs class device iterator function */
+static int lua_sysfs_class_device_iterator(lua_State *L) {
+	lua_sysfs_iterator_run(sysfs_class_device, obj_type_sysfs_class_device_push);
 }
 
 
@@ -2722,14 +2690,7 @@ static int sysfs_device__get_attr__meth(lua_State *L) {
 static int sysfs_device__get_attributes__meth(lua_State *L) {
   sysfs_device * this;
   this = obj_type_sysfs_device_check(L,1);
-  struct dlist *list = sysfs_get_device_attributes(this);
-
-  if (list) {
-		dlist_start(list);
-		lua_pushlightuserdata(L, list);
-		lua_pushcclosure(L, lua_sysfs_attribute_iterator, 1);
-		return 1;
-  }
+  lua_sysfs_iterator(this, sysfs_get_device_attributes, lua_sysfs_attribute_iterator);
 
   return 0;
 }
@@ -2856,6 +2817,28 @@ static int sysfs_class_device__get_device__meth(lua_State *L) {
   return 1;
 }
 
+/* method: get_attr */
+static int sysfs_class_device__get_attr__meth(lua_State *L) {
+  sysfs_class_device * this;
+  size_t name_len;
+  const char * name;
+  sysfs_attribute * rc_sysfs_get_classdev_attr;
+  this = obj_type_sysfs_class_device_check(L,1);
+  name = luaL_checklstring(L,2,&(name_len));
+  rc_sysfs_get_classdev_attr = sysfs_get_classdev_attr(this, name);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_classdev_attr, 0);
+  return 1;
+}
+
+/* method: get_attributes */
+static int sysfs_class_device__get_attributes__meth(lua_State *L) {
+  sysfs_class_device * this;
+  this = obj_type_sysfs_class_device_check(L,1);
+  lua_sysfs_iterator(this, sysfs_get_classdev_attributes, lua_sysfs_attribute_iterator);
+
+  return 0;
+}
+
 /* method: get_name */
 static int sysfs_class_device__get_name__meth(lua_State *L) {
   sysfs_class_device * this;
@@ -2884,29 +2867,6 @@ static int sysfs_class_device__get_classname__meth(lua_State *L) {
   return 1;
 		
   return 0;
-}
-
-/* method: get_attribute */
-static int sysfs_class_device__get_attribute__meth(lua_State *L) {
-  sysfs_class_device * this;
-  size_t name_len;
-  const char * name;
-  sysfs_attribute * rc_sysfs_get_classdev_attr;
-  this = obj_type_sysfs_class_device_check(L,1);
-  name = luaL_checklstring(L,2,&(name_len));
-  rc_sysfs_get_classdev_attr = sysfs_get_classdev_attr(this, name);
-  obj_type_sysfs_attribute_push(L, rc_sysfs_get_classdev_attr, 0);
-  return 1;
-}
-
-/* method: get_attributes */
-static int sysfs_class_device__get_attributes__meth(lua_State *L) {
-  sysfs_class_device * this;
-  dlist * rc_sysfs_get_classdev_attributes;
-  this = obj_type_sysfs_class_device_check(L,1);
-  rc_sysfs_get_classdev_attributes = sysfs_get_classdev_attributes(this);
-  obj_type_dlist_push(L, rc_sysfs_get_classdev_attributes, 0);
-  return 1;
 }
 
 /* method: open */
@@ -2945,15 +2905,8 @@ static int sysfs_class__get_devices__meth(lua_State *L) {
 static int sysfs_class__get_class_devices__meth(lua_State *L) {
   sysfs_class * this;
   this = obj_type_sysfs_class_check(L,1);
-  struct dlist *clsdevlist = sysfs_get_class_devices(this);
+  lua_sysfs_iterator(this, sysfs_get_class_devices, lua_sysfs_class_device_iterator);
 
-  if (clsdevlist) {
-		dlist_start(clsdevlist);
-		lua_pushlightuserdata(L, clsdevlist);
-		lua_pushcclosure(L, class_device_iter, 1);
-		return 1;
-  } 
-		
   return 0;
 }
 
@@ -2983,17 +2936,8 @@ static int sysfs_bus__close__meth(lua_State *L) {
 static int sysfs_bus__get_devices__meth(lua_State *L) {
   sysfs_bus * this;
   this = obj_type_sysfs_bus_check(L,1);
-  struct dlist *list;
+  lua_sysfs_iterator(this, sysfs_get_bus_devices, lua_sysfs_device_iterator);
 
-  list = sysfs_get_bus_devices(this);
-
-  if (list) {
-		dlist_start(list);
-		lua_pushlightuserdata(L, list);
-		lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
-		return 1;
-  }
-		
   return 0;
 }
 
@@ -3051,15 +2995,8 @@ static int sysfs_driver__get_attr__meth(lua_State *L) {
 static int sysfs_driver__get_devices__meth(lua_State *L) {
   sysfs_driver * this;
   this = obj_type_sysfs_driver_check(L,1);
-  struct dlist *list = sysfs_get_driver_devices(this);
+  lua_sysfs_iterator(this, sysfs_get_driver_devices, lua_sysfs_device_iterator);
 
-  if (list) {
-	dlist_start(list);
-	lua_pushlightuserdata(L, list);
-	lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
-	return 1;
-  }
-		
   return 0;
 }
 
@@ -3208,11 +3145,11 @@ static const luaL_Reg obj_sysfs_class_device_pub_funcs[] = {
 static const luaL_Reg obj_sysfs_class_device_methods[] = {
   {"close", sysfs_class_device__close__meth},
   {"get_device", sysfs_class_device__get_device__meth},
+  {"get_attr", sysfs_class_device__get_attr__meth},
+  {"get_attributes", sysfs_class_device__get_attributes__meth},
   {"get_name", sysfs_class_device__get_name__meth},
   {"get_path", sysfs_class_device__get_path__meth},
   {"get_classname", sysfs_class_device__get_classname__meth},
-  {"get_attribute", sysfs_class_device__get_attribute__meth},
-  {"get_attributes", sysfs_class_device__get_attributes__meth},
   {NULL, NULL}
 };
 
