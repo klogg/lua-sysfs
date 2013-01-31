@@ -79,6 +79,11 @@ object "sysfs_driver" {
   lua_sysfs_iterator(${this}, sysfs_get_driver_devices, lua_sysfs_device_iterator);
 ]]
         },
+	-- get module
+	method "get_module" {
+		c_method_call "sysfs_module *" "sysfs_get_driver_module" {}
+	},
+
 	--
 	-- lua binding specific methods for accessing 'struct sysfs_driver' members
 	--
