@@ -32,7 +32,6 @@ ffi_cdef (typedefs)
 
 c_source "src" {
 [[
-
 /* internal sysfs attribute iterator function */
 static int lua_sysfs_attribute_iterator(lua_State *L) {
 	lua_sysfs_iterator_run(sysfs_attribute, obj_type_sysfs_attribute_push);
