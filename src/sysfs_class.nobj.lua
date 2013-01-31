@@ -137,6 +137,12 @@ object "sysfs_class" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class" {}
 	},
+	-- get class device
+	method "get_class_device" {
+		c_method_call "sysfs_class_device *" "sysfs_get_class_device" {
+						"const char *", "name"
+		}
+	},
 	-- class device iterator
 	method "get_class_devices" {
 		c_source [[
