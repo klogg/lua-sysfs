@@ -156,15 +156,8 @@ static int lua_sysfs_class_device_iterator (lua_State *L) {
 },
 	-- get a list of devices
 	method "get_class_devices" {
-		c_source[[
-  struct dlist *clsdevlist = sysfs_get_class_devices(${this});
-
-  if (clsdevlist) {
-		dlist_start(clsdevlist);
-		lua_pushlightuserdata(L, clsdevlist);
-		lua_pushcclosure(L, lua_sysfs_class_device_iterator, 1);
-		return 1;
-  } 
-		]],
+		c_source [[
+  lua_sysfs_iterator(${this}, sysfs_get_class_devices, lua_sysfs_class_device_iterator);
+]],
 	},
 }
