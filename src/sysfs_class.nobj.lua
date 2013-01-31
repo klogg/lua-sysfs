@@ -137,7 +137,7 @@ object "sysfs_class" {
 	destructor "close" {
 		c_method_call "void" "sysfs_close_class" {}
 	},
-	-- get a list of devices
+	-- class device iterator
 	method "get_class_devices" {
 		c_source [[
   lua_sysfs_iterator(${this}, sysfs_get_class_devices, lua_sysfs_class_device_iterator);
