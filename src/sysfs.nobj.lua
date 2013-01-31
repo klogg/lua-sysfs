@@ -49,12 +49,12 @@ c_source "src" {
 [[
 
 /* macro to initialise an iterator */
-#define lua_sysfs_iterator(this, sysfs_get, lua_sysfs_iterator) \
-	struct dlist *list = sysfs_get(this); \
+#define lua_sysfs_iterator(this, dlist_get, obj_iterator) \
+	struct dlist *list = dlist_get(this); \
 	if (list) { \
 		dlist_start(list); \
 		lua_pushlightuserdata(L, list); \
-		lua_pushcclosure(L, lua_sysfs_iterator, 1); \
+		lua_pushcclosure(L, obj_iterator, 1); \
 		return 1; \
 	}
 
