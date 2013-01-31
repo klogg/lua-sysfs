@@ -45,6 +45,19 @@ c_function "get_mnt_path" {
 ]],
 }
 
+c_source "src" {
+[[
+#define lua_sysfs_iterator(this, sysfs_get, lua_sysfs_iterator) \
+	struct dlist *list = sysfs_get(this); \
+	if (list) { \
+		dlist_start(list); \
+		lua_pushlightuserdata(L, list); \
+		lua_pushcclosure(L, lua_sysfs_iterator, 1); \
+		return 1; \
+	}
+]]
+}
+
 --
 -- dlist
 --
