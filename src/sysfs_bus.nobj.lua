@@ -55,6 +55,12 @@ object "sysfs_bus" {
   lua_sysfs_iterator(${this}, sysfs_get_bus_devices, lua_sysfs_device_iterator);
 ]],
 	},
+	-- get driver
+	method "get_driver" {
+		c_method_call "sysfs_driver *" "sysfs_get_bus_driver" {
+						"const char *", "drvname"
+		}
+	},
 	-- sysfs driver iterator
 	method "get_drivers" {
 		c_source [[
