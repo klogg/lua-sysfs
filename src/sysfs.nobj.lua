@@ -45,6 +45,15 @@ c_function "get_mnt_path" {
 ]],
 }
 
+-- path_is_link: check if the path supplied points to a link
+c_function "path_is_link" {
+	var_in { "const char *", "path" },
+	var_out { "bool", "ret" },
+	c_source [[
+  ${ret} = !sysfs_path_is_link(${path});
+]]
+}
+
 c_source "src" {
 [[
 
