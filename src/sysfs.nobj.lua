@@ -54,6 +54,15 @@ c_function "path_is_link" {
 ]]
 }
 
+-- path_is_file: check if the path supplied points to a file
+c_function "path_is_file" {
+	var_in { "const char *", "path" },
+	var_out { "bool", "ret" },
+	c_source [[
+  ${ret} = !sysfs_path_is_file(${path});
+]]
+}
+
 c_source "src" {
 [[
 
