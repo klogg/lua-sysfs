@@ -135,7 +135,7 @@ object "sysfs_class" {
 c_source {
 [[
 
-static int class_device_iter (lua_State *L) {
+static int lua_sysfs_class_device_iterator (lua_State *L) {
 	struct dlist *clsdevlist = lua_touserdata(L, lua_upvalueindex(1));
 	struct sysfs_class_device *obj;
 
@@ -162,7 +162,7 @@ static int class_device_iter (lua_State *L) {
   if (clsdevlist) {
 		dlist_start(clsdevlist);
 		lua_pushlightuserdata(L, clsdevlist);
-		lua_pushcclosure(L, class_device_iter, 1);
+		lua_pushcclosure(L, lua_sysfs_class_device_iterator, 1);
 		return 1;
   } 
 		]],
