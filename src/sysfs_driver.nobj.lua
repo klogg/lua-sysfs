@@ -30,6 +30,16 @@ c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
+-- internal functions
+c_source "src" {
+[[
+/* internal sysfs driver iterator function */
+static int lua_sysfs_driver_iterator(lua_State *L) {
+	lua_sysfs_iterator_run(sysfs_driver, obj_type_sysfs_driver_push);
+}
+]]
+}
+
 object "sysfs_driver" {
 	userdata_type = "generic",
 	no_weak_ref = true,
