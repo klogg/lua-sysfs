@@ -286,6 +286,8 @@ typedef struct sysfs_bus sysfs_bus;
 
 typedef struct sysfs_driver sysfs_driver;
 
+typedef struct sysfs_module sysfs_module;
+
 
 
 
@@ -312,6 +314,9 @@ static obj_type obj_types[] = {
 #define obj_type_id_sysfs_driver 6
 #define obj_type_sysfs_driver (obj_types[obj_type_id_sysfs_driver])
   { NULL, 6, 0, "sysfs_driver" },
+#define obj_type_id_sysfs_module 7
+#define obj_type_sysfs_module (obj_types[obj_type_id_sysfs_module])
+  { NULL, 7, 0, "sysfs_module" },
   {NULL, -1, 0, NULL},
 };
 
@@ -1447,6 +1452,15 @@ static char *obj_interfaces[] = {
 #define obj_type_sysfs_driver_push(L, obj, flags) \
 	obj_udata_luapush(L, obj, &(obj_type_sysfs_driver), flags)
 
+#define obj_type_sysfs_module_check(L, _index) \
+	obj_udata_luacheck(L, _index, &(obj_type_sysfs_module))
+#define obj_type_sysfs_module_optional(L, _index) \
+	obj_udata_luaoptional(L, _index, &(obj_type_sysfs_module))
+#define obj_type_sysfs_module_delete(L, _index, flags) \
+	obj_udata_luadelete(L, _index, &(obj_type_sysfs_module), flags)
+#define obj_type_sysfs_module_push(L, obj, flags) \
+	obj_udata_luapush(L, obj, &(obj_type_sysfs_module), flags)
+
 
 
 
@@ -1626,6 +1640,7 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "typedef struct sysfs_class sysfs_class;\n"
 "typedef struct sysfs_bus sysfs_bus;\n"
 "typedef struct sysfs_driver sysfs_driver;\n"
+"typedef struct sysfs_module sysfs_module;\n"
 "\n"
 "]]\n"
 "\n"
@@ -1677,13 +1692,15 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "void sysfs_close_class(sysfs_class *);\n"
 "\n"
-"dlist * sysfs_get_class_devices(sysfs_class *);\n"
-"\n"
 "typedef struct sysfs_bus sysfs_bus;\n"
 "\n"
 "sysfs_bus * sysfs_open_bus(const char *);\n"
 "\n"
 "void sysfs_close_bus(sysfs_bus *);\n"
+"\n"
+"sysfs_device * sysfs_get_bus_device(sysfs_bus *, const char *);\n"
+"\n"
+"sysfs_driver * sysfs_get_bus_driver(sysfs_bus *, const char *);\n"
 "\n"
 "typedef struct sysfs_driver sysfs_driver;\n"
 "\n"
@@ -1694,6 +1711,22 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "sysfs_driver * sysfs_open_driver_path(const char *);\n"
 "\n"
 "sysfs_attribute * sysfs_get_driver_attr(sysfs_driver *, const char *);\n"
+"\n"
+"sysfs_module * sysfs_get_driver_module(sysfs_driver *);\n"
+"\n"
+"typedef struct sysfs_module sysfs_module;\n"
+"\n"
+"sysfs_module * sysfs_open_module(const char *);\n"
+"\n"
+"void sysfs_close_module(sysfs_module *);\n"
+"\n"
+"sysfs_module * sysfs_open_module_path(const char *);\n"
+"\n"
+"sysfs_attribute * sysfs_get_module_attr(sysfs_module *, const char *);\n"
+"\n"
+"sysfs_attribute * sysfs_get_module_parm(sysfs_module *, const char *);\n"
+"\n"
+"sysfs_attribute * sysfs_get_module_section(sysfs_module *, const char *);\n"
 "\n"
 "\n"
 "]]\n"
@@ -1970,7 +2003,7 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "		return ptr\n"
 "	end\n"
 "\n"
-"	function obj_mt:__tostring()\n"
+"	function obj_mt:__tostring()\n", /* ----- CUT ----- */
 "		return sformat(\"sysfs_device: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
 "	end\n"
 "\n"
@@ -1991,7 +2024,7 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "local obj_type_sysfs_class_device_delete\n"
 "local obj_type_sysfs_class_device_push\n"
 "\n"
-"do\n", /* ----- CUT ----- */
+"do\n"
 "	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_class_device\", \"sysfs_class_device *\")\n"
 "\n"
 "	function obj_type_sysfs_class_device_check(ptr)\n"
@@ -2207,6 +2240,61 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "end\n"
 "\n"
 "\n"
+"local obj_type_sysfs_module_check\n"
+"local obj_type_sysfs_module_delete\n"
+"local obj_type_sysfs_module_push\n"
+"\n"
+"do\n"
+"	local obj_mt, obj_type, obj_ctype = obj_register_ctype(\"sysfs_module\", \"sysfs_module *\")\n"
+"\n"
+"	function obj_type_sysfs_module_check(ptr)\n"
+"		-- if ptr is nil or is the correct type, then just return it.\n"
+"		if not ptr or ffi.istype(obj_ctype, ptr) then return ptr end\n"
+"		-- check if it is a compatible type.\n"
+"		local ctype = tostring(ffi.typeof(ptr))\n"
+"		local bcaster = _obj_subs.sysfs_module[ctype]\n"
+"		if bcaster then\n"
+"			return bcaster(ptr)\n"
+"		end\n"
+"		return error(\"Expected 'sysfs_module *'\", 2)\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_module_delete(ptr)\n"
+"		local id = obj_ptr_to_id(ptr)\n"
+"		local flags = nobj_obj_flags[id]\n"
+"		if not flags then return nil, 0 end\n"
+"		ffi.gc(ptr, nil)\n"
+"		nobj_obj_flags[id] = nil\n"
+"		return ptr, flags\n"
+"	end\n"
+"\n"
+"	function obj_type_sysfs_module_push(ptr, flags)\n"
+"\n"
+"		if flags ~= 0 then\n"
+"			local id = obj_ptr_to_id(ptr)\n"
+"			nobj_obj_flags[id] = flags\n"
+"			ffi.gc(ptr, obj_mt.__gc)\n"
+"		end\n"
+"		return ptr\n"
+"	end\n"
+"\n"
+"	function obj_mt:__tostring()\n"
+"		return sformat(\"sysfs_module: %p, flags=%d\", self, nobj_obj_flags[obj_ptr_to_id(self)] or 0)\n"
+"	end\n"
+"\n"
+"	-- type checking function for C API.\n"
+"	_priv[obj_type] = obj_type_sysfs_module_check\n"
+"	-- push function for C API.\n"
+"	reg_table[obj_type] = function(ptr, flags)\n"
+"		return obj_type_sysfs_module_push(ffi.cast(obj_ctype,ptr), flags)\n"
+"	end\n"
+"\n"
+"	-- export check functions for use in other modules.\n"
+"	obj_mt.c_check = obj_type_sysfs_module_check\n"
+"	obj_mt.ffi_check = obj_type_sysfs_module_check\n"
+"end\n"
+"\n"
+"\n"
 "local obj_type_MutableBuffer_check =\n"
 "	obj_get_interface_check(\"MutableBufferIF\", \"Expected object with MutableBuffer interface\")\n"
 "\n"
@@ -2412,18 +2500,19 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "end\n"
 "_priv.sysfs_class.__gc = _meth.sysfs_class.close\n"
 "\n"
-"-- method: get_devices\n"
-"function _meth.sysfs_class.get_devices(self)\n"
+"-- method: get_class_device\n"
+"function _meth.sysfs_class.get_class_device(self, name)\n"
 "  \n"
-"  local rc_sysfs_get_class_devices\n"
-"  rc_sysfs_get_class_devices = C.sysfs_get_class_devices(self)\n"
-"  return obj_type_dlist_push(rc_sysfs_get_class_devices, 0)\n"
+"  local name_len = #name\n"
+"  local rc_sysfs_get_class_device\n"
+"  rc_sysfs_get_class_device = C.sysfs_get_class_device(self, name)\n"
+"  return obj_type_sysfs_class_device_push(rc_sysfs_get_class_device, 0)\n"
 "end\n"
 "\n"
 "-- End \"sysfs_class\" FFI interface\n"
 "\n"
 "\n"
-"-- Start \"sysfs_bus\" FFI interface\n"
+"-- Start \"sysfs_bus\" FFI interface\n", /* ----- CUT ----- */
 "-- method: open\n"
 "function _pub.sysfs_bus.open(name)\n"
 "  local name_len = #name\n"
@@ -2442,6 +2531,24 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "  return \n"
 "end\n"
 "_priv.sysfs_bus.__gc = _meth.sysfs_bus.close\n"
+"\n"
+"-- method: get_device\n"
+"function _meth.sysfs_bus.get_device(self, id)\n"
+"  \n"
+"  local id_len = #id\n"
+"  local rc_sysfs_get_bus_device\n"
+"  rc_sysfs_get_bus_device = C.sysfs_get_bus_device(self, id)\n"
+"  return obj_type_sysfs_device_push(rc_sysfs_get_bus_device, 0)\n"
+"end\n"
+"\n"
+"-- method: get_driver\n"
+"function _meth.sysfs_bus.get_driver(self, drvname)\n"
+"  \n"
+"  local drvname_len = #drvname\n"
+"  local rc_sysfs_get_bus_driver\n"
+"  rc_sysfs_get_bus_driver = C.sysfs_get_bus_driver(self, drvname)\n"
+"  return obj_type_sysfs_driver_push(rc_sysfs_get_bus_driver, 0)\n"
+"end\n"
 "\n"
 "-- End \"sysfs_bus\" FFI interface\n"
 "\n"
@@ -2485,7 +2592,74 @@ static const char *sysfs_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "  return obj_type_sysfs_attribute_push(rc_sysfs_get_driver_attr, 0)\n"
 "end\n"
 "\n"
+"-- method: get_module\n"
+"function _meth.sysfs_driver.get_module(self)\n"
+"  \n"
+"  local rc_sysfs_get_driver_module\n"
+"  rc_sysfs_get_driver_module = C.sysfs_get_driver_module(self)\n"
+"  return obj_type_sysfs_module_push(rc_sysfs_get_driver_module, 0)\n"
+"end\n"
+"\n"
 "-- End \"sysfs_driver\" FFI interface\n"
+"\n"
+"\n"
+"-- Start \"sysfs_module\" FFI interface\n"
+"-- method: open\n"
+"function _pub.sysfs_module.open(name)\n"
+"  local name_len = #name\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
+"  local self\n"
+"  self = C.sysfs_open_module(name)\n"
+"  return obj_type_sysfs_module_push(self, this_flags)\n"
+"end\n"
+"register_default_constructor(_pub,\"sysfs_module\",_pub.sysfs_module.open)\n"
+"\n"
+"-- method: close\n"
+"function _meth.sysfs_module.close(self)\n"
+"  local self,this_flags = obj_type_sysfs_module_delete(self)\n"
+"  if not self then return end\n"
+"  C.sysfs_close_module(self)\n"
+"  return \n"
+"end\n"
+"_priv.sysfs_module.__gc = _meth.sysfs_module.close\n"
+"\n"
+"-- method: open_path\n"
+"function _pub.sysfs_module.open_path(path)\n"
+"  local path_len = #path\n"
+"  local this_flags = OBJ_UDATA_FLAG_OWN\n"
+"  local self\n"
+"  self = C.sysfs_open_module_path(path)\n"
+"  return obj_type_sysfs_module_push(self, this_flags)\n"
+"end\n"
+"\n"
+"-- method: get_attr\n"
+"function _meth.sysfs_module.get_attr(self, name)\n"
+"  \n"
+"  local name_len = #name\n"
+"  local rc_sysfs_get_module_attr\n"
+"  rc_sysfs_get_module_attr = C.sysfs_get_module_attr(self, name)\n"
+"  return obj_type_sysfs_attribute_push(rc_sysfs_get_module_attr, 0)\n"
+"end\n"
+"\n"
+"-- method: get_parm\n"
+"function _meth.sysfs_module.get_parm(self, parameter)\n"
+"  \n"
+"  local parameter_len = #parameter\n"
+"  local rc_sysfs_get_module_parm\n"
+"  rc_sysfs_get_module_parm = C.sysfs_get_module_parm(self, parameter)\n"
+"  return obj_type_sysfs_attribute_push(rc_sysfs_get_module_parm, 0)\n"
+"end\n"
+"\n"
+"-- method: get_section\n"
+"function _meth.sysfs_module.get_section(self, section)\n"
+"  \n"
+"  local section_len = #section\n"
+"  local rc_sysfs_get_module_section\n"
+"  rc_sysfs_get_module_section = C.sysfs_get_module_section(self, section)\n"
+"  return obj_type_sysfs_attribute_push(rc_sysfs_get_module_section, 0)\n"
+"end\n"
+"\n"
+"-- End \"sysfs_module\" FFI interface\n"
 "\n", NULL };
 
 /* macro to initialise an iterator */
@@ -2524,6 +2698,11 @@ static int lua_sysfs_class_device_iterator(lua_State *L) {
 	lua_sysfs_iterator_run(sysfs_class_device, obj_type_sysfs_class_device_push);
 }
 
+/* internal sysfs driver iterator function */
+static int lua_sysfs_driver_iterator(lua_State *L) {
+	lua_sysfs_iterator_run(sysfs_driver, obj_type_sysfs_driver_push);
+}
+
 
 
 /* method: get_mnt_path */
@@ -2539,6 +2718,42 @@ static int sysfs__get_mnt_path__func(lua_State *L) {
   }
 
   lua_pushstring(L, mnt_path);
+  return 1;
+}
+
+/* method: path_is_link */
+static int sysfs__path_is_link__func(lua_State *L) {
+  size_t path_len;
+  const char * path;
+  bool ret = 0;
+  path = luaL_checklstring(L,1,&(path_len));
+  ret = !sysfs_path_is_link(path);
+
+  lua_pushboolean(L, ret);
+  return 1;
+}
+
+/* method: path_is_file */
+static int sysfs__path_is_file__func(lua_State *L) {
+  size_t path_len;
+  const char * path;
+  bool ret = 0;
+  path = luaL_checklstring(L,1,&(path_len));
+  ret = !sysfs_path_is_file(path);
+
+  lua_pushboolean(L, ret);
+  return 1;
+}
+
+/* method: path_is_dir */
+static int sysfs__path_is_dir__func(lua_State *L) {
+  size_t path_len;
+  const char * path;
+  bool ret = 0;
+  path = luaL_checklstring(L,1,&(path_len));
+  ret = !sysfs_path_is_dir(path);
+
+  lua_pushboolean(L, ret);
   return 1;
 }
 
@@ -2891,13 +3106,16 @@ static int sysfs_class__close__meth(lua_State *L) {
   return 0;
 }
 
-/* method: get_devices */
-static int sysfs_class__get_devices__meth(lua_State *L) {
+/* method: get_class_device */
+static int sysfs_class__get_class_device__meth(lua_State *L) {
   sysfs_class * this;
-  dlist * rc_sysfs_get_class_devices;
+  size_t name_len;
+  const char * name;
+  sysfs_class_device * rc_sysfs_get_class_device;
   this = obj_type_sysfs_class_check(L,1);
-  rc_sysfs_get_class_devices = sysfs_get_class_devices(this);
-  obj_type_dlist_push(L, rc_sysfs_get_class_devices, 0);
+  name = luaL_checklstring(L,2,&(name_len));
+  rc_sysfs_get_class_device = sysfs_get_class_device(this, name);
+  obj_type_sysfs_class_device_push(L, rc_sysfs_get_class_device, 0);
   return 1;
 }
 
@@ -2932,11 +3150,46 @@ static int sysfs_bus__close__meth(lua_State *L) {
   return 0;
 }
 
+/* method: get_device */
+static int sysfs_bus__get_device__meth(lua_State *L) {
+  sysfs_bus * this;
+  size_t id_len;
+  const char * id;
+  sysfs_device * rc_sysfs_get_bus_device;
+  this = obj_type_sysfs_bus_check(L,1);
+  id = luaL_checklstring(L,2,&(id_len));
+  rc_sysfs_get_bus_device = sysfs_get_bus_device(this, id);
+  obj_type_sysfs_device_push(L, rc_sysfs_get_bus_device, 0);
+  return 1;
+}
+
 /* method: get_devices */
 static int sysfs_bus__get_devices__meth(lua_State *L) {
   sysfs_bus * this;
   this = obj_type_sysfs_bus_check(L,1);
   lua_sysfs_iterator(this, sysfs_get_bus_devices, lua_sysfs_device_iterator);
+
+  return 0;
+}
+
+/* method: get_driver */
+static int sysfs_bus__get_driver__meth(lua_State *L) {
+  sysfs_bus * this;
+  size_t drvname_len;
+  const char * drvname;
+  sysfs_driver * rc_sysfs_get_bus_driver;
+  this = obj_type_sysfs_bus_check(L,1);
+  drvname = luaL_checklstring(L,2,&(drvname_len));
+  rc_sysfs_get_bus_driver = sysfs_get_bus_driver(this, drvname);
+  obj_type_sysfs_driver_push(L, rc_sysfs_get_bus_driver, 0);
+  return 1;
+}
+
+/* method: get_drivers */
+static int sysfs_bus__get_drivers__meth(lua_State *L) {
+  sysfs_bus * this;
+  this = obj_type_sysfs_bus_check(L,1);
+  lua_sysfs_iterator(this, sysfs_get_bus_drivers, lua_sysfs_driver_iterator);
 
   return 0;
 }
@@ -2991,6 +3244,15 @@ static int sysfs_driver__get_attr__meth(lua_State *L) {
   return 1;
 }
 
+/* method: get_attributes */
+static int sysfs_driver__get_attributes__meth(lua_State *L) {
+  sysfs_driver * this;
+  this = obj_type_sysfs_driver_check(L,1);
+  lua_sysfs_iterator(this, sysfs_get_driver_attributes, lua_sysfs_attribute_iterator);
+
+  return 0;
+}
+
 /* method: get_devices */
 static int sysfs_driver__get_devices__meth(lua_State *L) {
   sysfs_driver * this;
@@ -2998,6 +3260,16 @@ static int sysfs_driver__get_devices__meth(lua_State *L) {
   lua_sysfs_iterator(this, sysfs_get_driver_devices, lua_sysfs_device_iterator);
 
   return 0;
+}
+
+/* method: get_module */
+static int sysfs_driver__get_module__meth(lua_State *L) {
+  sysfs_driver * this;
+  sysfs_module * rc_sysfs_get_driver_module;
+  this = obj_type_sysfs_driver_check(L,1);
+  rc_sysfs_get_driver_module = sysfs_get_driver_module(this);
+  obj_type_sysfs_module_push(L, rc_sysfs_get_driver_module, 0);
+  return 1;
 }
 
 /* method: get_name */
@@ -3017,6 +3289,126 @@ static int sysfs_driver__get_path__meth(lua_State *L) {
   lua_pushstring(L, this->path);
   return 1;
                 
+  return 0;
+}
+
+/* method: open */
+static int sysfs_module__open__meth(lua_State *L) {
+  size_t name_len;
+  const char * name;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  sysfs_module * this;
+  name = luaL_checklstring(L,1,&(name_len));
+  this = sysfs_open_module(name);
+  obj_type_sysfs_module_push(L, this, this_flags);
+  return 1;
+}
+
+/* method: close */
+static int sysfs_module__close__meth(lua_State *L) {
+  int this_flags = 0;
+  sysfs_module * this;
+  this = obj_type_sysfs_module_delete(L,1,&(this_flags));
+  if(!(this_flags & OBJ_UDATA_FLAG_OWN)) { return 0; }
+  sysfs_close_module(this);
+  return 0;
+}
+
+/* method: open_path */
+static int sysfs_module__open_path__meth(lua_State *L) {
+  size_t path_len;
+  const char * path;
+  int this_flags = OBJ_UDATA_FLAG_OWN;
+  sysfs_module * this;
+  path = luaL_checklstring(L,1,&(path_len));
+  this = sysfs_open_module_path(path);
+  obj_type_sysfs_module_push(L, this, this_flags);
+  return 1;
+}
+
+/* method: get_attr */
+static int sysfs_module__get_attr__meth(lua_State *L) {
+  sysfs_module * this;
+  size_t name_len;
+  const char * name;
+  sysfs_attribute * rc_sysfs_get_module_attr;
+  this = obj_type_sysfs_module_check(L,1);
+  name = luaL_checklstring(L,2,&(name_len));
+  rc_sysfs_get_module_attr = sysfs_get_module_attr(this, name);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_module_attr, 0);
+  return 1;
+}
+
+/* method: get_parm */
+static int sysfs_module__get_parm__meth(lua_State *L) {
+  sysfs_module * this;
+  size_t parameter_len;
+  const char * parameter;
+  sysfs_attribute * rc_sysfs_get_module_parm;
+  this = obj_type_sysfs_module_check(L,1);
+  parameter = luaL_checklstring(L,2,&(parameter_len));
+  rc_sysfs_get_module_parm = sysfs_get_module_parm(this, parameter);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_module_parm, 0);
+  return 1;
+}
+
+/* method: get_section */
+static int sysfs_module__get_section__meth(lua_State *L) {
+  sysfs_module * this;
+  size_t section_len;
+  const char * section;
+  sysfs_attribute * rc_sysfs_get_module_section;
+  this = obj_type_sysfs_module_check(L,1);
+  section = luaL_checklstring(L,2,&(section_len));
+  rc_sysfs_get_module_section = sysfs_get_module_section(this, section);
+  obj_type_sysfs_attribute_push(L, rc_sysfs_get_module_section, 0);
+  return 1;
+}
+
+/* method: get_attributes */
+static int sysfs_module__get_attributes__meth(lua_State *L) {
+  sysfs_module * this;
+  this = obj_type_sysfs_module_check(L,1);
+  lua_sysfs_iterator(this, sysfs_get_module_attributes, lua_sysfs_attribute_iterator);
+
+  return 0;
+}
+
+/* method: get_parms */
+static int sysfs_module__get_parms__meth(lua_State *L) {
+  sysfs_module * this;
+  this = obj_type_sysfs_module_check(L,1);
+  lua_sysfs_iterator(this, sysfs_get_module_parms, lua_sysfs_attribute_iterator);
+
+  return 0;
+}
+
+/* method: get_sections */
+static int sysfs_module__get_sections__meth(lua_State *L) {
+  sysfs_module * this;
+  this = obj_type_sysfs_module_check(L,1);
+  lua_sysfs_iterator(this, sysfs_get_module_sections, lua_sysfs_attribute_iterator);
+
+  return 0;
+}
+
+/* method: get_name */
+static int sysfs_module__get_name__meth(lua_State *L) {
+  sysfs_module * this;
+  this = obj_type_sysfs_module_check(L,1);
+  lua_pushstring(L, this->name);
+  return 1;
+
+  return 0;
+}
+
+/* method: get_path */
+static int sysfs_module__get_path__meth(lua_State *L) {
+  sysfs_module * this;
+  this = obj_type_sysfs_module_check(L,1);
+  lua_pushstring(L, this->path);
+  return 1;
+
   return 0;
 }
 
@@ -3183,7 +3575,7 @@ static const luaL_Reg obj_sysfs_class_pub_funcs[] = {
 
 static const luaL_Reg obj_sysfs_class_methods[] = {
   {"close", sysfs_class__close__meth},
-  {"get_devices", sysfs_class__get_devices__meth},
+  {"get_class_device", sysfs_class__get_class_device__meth},
   {"get_class_devices", sysfs_class__get_class_devices__meth},
   {NULL, NULL}
 };
@@ -3218,7 +3610,10 @@ static const luaL_Reg obj_sysfs_bus_pub_funcs[] = {
 
 static const luaL_Reg obj_sysfs_bus_methods[] = {
   {"close", sysfs_bus__close__meth},
+  {"get_device", sysfs_bus__get_device__meth},
   {"get_devices", sysfs_bus__get_devices__meth},
+  {"get_driver", sysfs_bus__get_driver__meth},
+  {"get_drivers", sysfs_bus__get_drivers__meth},
   {NULL, NULL}
 };
 
@@ -3254,7 +3649,9 @@ static const luaL_Reg obj_sysfs_driver_pub_funcs[] = {
 static const luaL_Reg obj_sysfs_driver_methods[] = {
   {"close", sysfs_driver__close__meth},
   {"get_attr", sysfs_driver__get_attr__meth},
+  {"get_attributes", sysfs_driver__get_attributes__meth},
   {"get_devices", sysfs_driver__get_devices__meth},
+  {"get_module", sysfs_driver__get_module__meth},
   {"get_name", sysfs_driver__get_name__meth},
   {"get_path", sysfs_driver__get_path__meth},
   {NULL, NULL}
@@ -3283,8 +3680,53 @@ static const reg_impl obj_sysfs_driver_implements[] = {
   {NULL, NULL}
 };
 
+static const luaL_Reg obj_sysfs_module_pub_funcs[] = {
+  {"open", sysfs_module__open__meth},
+  {"open_path", sysfs_module__open_path__meth},
+  {NULL, NULL}
+};
+
+static const luaL_Reg obj_sysfs_module_methods[] = {
+  {"close", sysfs_module__close__meth},
+  {"get_attr", sysfs_module__get_attr__meth},
+  {"get_parm", sysfs_module__get_parm__meth},
+  {"get_section", sysfs_module__get_section__meth},
+  {"get_attributes", sysfs_module__get_attributes__meth},
+  {"get_parms", sysfs_module__get_parms__meth},
+  {"get_sections", sysfs_module__get_sections__meth},
+  {"get_name", sysfs_module__get_name__meth},
+  {"get_path", sysfs_module__get_path__meth},
+  {NULL, NULL}
+};
+
+static const luaL_Reg obj_sysfs_module_metas[] = {
+  {"__gc", sysfs_module__close__meth},
+  {"__tostring", obj_udata_default_tostring},
+  {"__eq", obj_udata_default_equal},
+  {NULL, NULL}
+};
+
+static const obj_base obj_sysfs_module_bases[] = {
+  {-1, NULL}
+};
+
+static const obj_field obj_sysfs_module_fields[] = {
+  {NULL, 0, 0, 0}
+};
+
+static const obj_const obj_sysfs_module_constants[] = {
+  {NULL, NULL, 0.0 , 0}
+};
+
+static const reg_impl obj_sysfs_module_implements[] = {
+  {NULL, NULL}
+};
+
 static const luaL_Reg sysfs_function[] = {
   {"get_mnt_path", sysfs__get_mnt_path__func},
+  {"path_is_link", sysfs__path_is_link__func},
+  {"path_is_file", sysfs__path_is_file__func},
+  {"path_is_dir", sysfs__path_is_dir__func},
   {NULL, NULL}
 };
 
@@ -3302,6 +3744,7 @@ static const reg_sub_module reg_sub_modules[] = {
   { &(obj_type_sysfs_class), REG_OBJECT, obj_sysfs_class_pub_funcs, obj_sysfs_class_methods, obj_sysfs_class_metas, obj_sysfs_class_bases, obj_sysfs_class_fields, obj_sysfs_class_constants, obj_sysfs_class_implements, 0},
   { &(obj_type_sysfs_bus), REG_OBJECT, obj_sysfs_bus_pub_funcs, obj_sysfs_bus_methods, obj_sysfs_bus_metas, obj_sysfs_bus_bases, obj_sysfs_bus_fields, obj_sysfs_bus_constants, obj_sysfs_bus_implements, 0},
   { &(obj_type_sysfs_driver), REG_OBJECT, obj_sysfs_driver_pub_funcs, obj_sysfs_driver_methods, obj_sysfs_driver_metas, obj_sysfs_driver_bases, obj_sysfs_driver_fields, obj_sysfs_driver_constants, obj_sysfs_driver_implements, 0},
+  { &(obj_type_sysfs_module), REG_OBJECT, obj_sysfs_module_pub_funcs, obj_sysfs_module_methods, obj_sysfs_module_metas, obj_sysfs_module_bases, obj_sysfs_module_fields, obj_sysfs_module_constants, obj_sysfs_module_implements, 0},
   {NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0}
 };
 
