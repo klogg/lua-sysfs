@@ -55,6 +55,16 @@ c_source "src" {
 		lua_pushcclosure(L, lua_sysfs_iterator, 1); \
 		return 1; \
 	}
+
+#define lua_sysfs_iterator_run(obj_type, obj_type_push) \
+	struct dlist *list = lua_touserdata(L, lua_upvalueindex(1)); \
+	struct obj_type *obj; \
+	int obj_flags = 0; \
+	if ((obj = dlist_next(list)) != NULL) { \
+		obj_type_push(L, obj, obj_flags); \
+		return 1; \
+	} \
+	return 0
 ]]
 }
 
