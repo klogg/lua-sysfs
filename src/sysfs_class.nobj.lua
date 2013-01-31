@@ -80,7 +80,9 @@ object "sysfs_class_device" {
 	},
 	-- get attributes
 	method "get_attributes" {
-		c_method_call "dlist *" "sysfs_get_classdev_attributes" {}
+		c_source [[
+  lua_sysfs_iterator(${this}, sysfs_get_classdev_attributes, lua_sysfs_attribute_iterator);
+]]
 	},
 
 	--
