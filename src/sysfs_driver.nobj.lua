@@ -67,6 +67,12 @@ object "sysfs_driver" {
 						"const char *", "name"
 		}
 	},
+	-- sysfs get attributes iterator
+	method "get_attributes" {
+	c_source [[
+  lua_sysfs_iterator(${this}, sysfs_get_driver_attributes, lua_sysfs_attribute_iterator);
+]]
+        },
 	-- sysfs get devices iterator
 	method "get_devices" {
 	c_source [[
