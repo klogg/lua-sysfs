@@ -45,17 +45,8 @@ object "sysfs_bus" {
 	},
 	-- sysfs device iterator
 	method "get_devices" {
-		c_source[[
-  struct dlist *list;
-
-  list = sysfs_get_bus_devices(${this});
-
-  if (list) {
-		dlist_start(list);
-		lua_pushlightuserdata(L, list);
-		lua_pushcclosure(L, lua_sysfs_device_iterator, 1);
-		return 1;
-  }
-		]],
+		c_source [[
+  lua_sysfs_iterator(${this}, sysfs_get_bus_devices, lua_sysfs_device_iterator);
+]],
 	},
 }
