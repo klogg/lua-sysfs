@@ -30,6 +30,9 @@ c_source "typedefs" (typedefs)
 -- pass extra C type info to FFI.
 ffi_cdef (typedefs)
 
+--
+-- sysfs bus object
+--
 object "sysfs_bus" {
 
 	userdata_type = "generic",
