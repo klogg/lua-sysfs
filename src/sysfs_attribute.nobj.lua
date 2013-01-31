@@ -35,21 +35,7 @@ c_source "src" {
 
 /* internal sysfs attribute iterator function */
 static int lua_sysfs_attribute_iterator(lua_State *L) {
-	struct dlist *list = (struct dlist *) lua_touserdata(L, lua_upvalueindex(1));
-	struct sysfs_device *obj;
-
-	/* TODO: clarify the flag types
-	 * OBJ_UDATA_FLAG_OWN segfaults here with lua and luajit
-	 * OBJ_UDATA_FLAG_LOOKUP works with lua but segfaults with luajit
-	 */
-	int obj_flags = 0;
-
-	if ((obj = dlist_next(list)) != NULL) {
-		obj_type_sysfs_attribute_push(L, obj, obj_flags);
-		return 1;
-	}
-
-	return 0;
+	lua_sysfs_iterator_run(sysfs_attribute, obj_type_sysfs_attribute_push);
 }
 ]]
 }
