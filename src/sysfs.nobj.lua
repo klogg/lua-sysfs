@@ -47,6 +47,8 @@ c_function "get_mnt_path" {
 
 c_source "src" {
 [[
+
+/* macro to initialise an iterator */
 #define lua_sysfs_iterator(this, sysfs_get, lua_sysfs_iterator) \
 	struct dlist *list = sysfs_get(this); \
 	if (list) { \
@@ -56,6 +58,7 @@ c_source "src" {
 		return 1; \
 	}
 
+/* macro to run an object specific iterator */
 #define lua_sysfs_iterator_run(obj_type, obj_type_push) \
 	struct dlist *list = lua_touserdata(L, lua_upvalueindex(1)); \
 	struct obj_type *obj; \
