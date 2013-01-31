@@ -106,14 +106,7 @@ object "sysfs_device" {
 	-- get attributes iterator
 	method "get_attributes" {
 		c_source [[
-  struct dlist *list = sysfs_get_device_attributes(${this});
-
-  if (list) {
-		dlist_start(list);
-		lua_pushlightuserdata(L, list);
-		lua_pushcclosure(L, lua_sysfs_attribute_iterator, 1);
-		return 1;
-  }
+  lua_sysfs_iterator(${this}, sysfs_get_device_attributes, lua_sysfs_attribute_iterator);
 ]],
 	},
 
