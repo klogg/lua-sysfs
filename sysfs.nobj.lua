@@ -18,6 +18,7 @@ subfiles {
 "src/sysfs_class.nobj.lua",
 "src/sysfs_bus.nobj.lua",
 "src/sysfs_driver.nobj.lua",
+"src/sysfs_module.nobj.lua",
 },
 }
 
