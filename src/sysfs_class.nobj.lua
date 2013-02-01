@@ -149,4 +149,15 @@ object "sysfs_class" {
   lua_sysfs_iterator(${this}, sysfs_get_class_devices, lua_sysfs_class_device_iterator);
 ]],
 	},
+
+	--
+	-- lua binding specific methods for accessing 'struct sysfs_class' members
+	--
+	-- get name
+	method "get_name" {
+		c_source[[
+  lua_pushstring(L, ${this}->name);
+  return 1;
+]]
+	},
 }
