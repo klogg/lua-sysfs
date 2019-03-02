@@ -99,4 +99,3 @@ you have to to set the CMake variable `GENERATE_LUADOCS` to `FALSE`.
 -----------------------------------------------------------------------------
 cmake ../ -DUSE_PRE_GENERATED_BINDINGS=FALSE -DGENERATE_LUADOCS=FALSE
 -----------------------------------------------------------------------------
-
