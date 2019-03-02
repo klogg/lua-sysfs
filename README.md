@@ -1,101 +1,73 @@
-lua-sysfs - Lua bindings for libsysfs
-=====================================
-:author: Christian Wiese
-:email:  chris@opensde.org
+# lua-sysfs - Lua bindings for libsysfs
 
+Christian Wiese chris@opensde.org
 
-[WARNING]
-The Lua bindings for `libsysfs` provided here are in a very early stage of
-development, thus do not use them in a production environment!
+:exclamation: **WARNING**
+The Lua bindings for `libsysfs` provided here are in a very early stage of development, thus do not use them in a production environment!
 
-Build Dependencies
-------------------
+## Build Dependencies
 
 Besides having a working compiler toolchain available you will need:
 
-- cmake
-- libsysfs
+* cmake
+* libsysfs
 
-Installing
-----------
+## Installing
 
-=== Install from git
+### Install from git
 
-.Clone the git repository
------------------------------------------------------------------------------
-git clone git://github.com/morfoh/lua-sysfs.git
------------------------------------------------------------------------------
------------------------------------------------------------------------------
-cd lua-sysfs
------------------------------------------------------------------------------
-
-.Prepare a dedicated build directory
------------------------------------------------------------------------------
+Prepare a dedicated build directory
+```
 mkdir build
------------------------------------------------------------------------------
------------------------------------------------------------------------------
 cd build
------------------------------------------------------------------------------
+```
 
-.Generate Makefiles and related build infrastructure
------------------------------------------------------------------------------
+Generate Makefiles and related build infrastructure
+```
 cmake ../
------------------------------------------------------------------------------
+```
 
-.Alternatively you can specify the path where to install the module
------------------------------------------------------------------------------
+Alternatively you can specify the path where to install the module
+```
 cmake ../ -DINSTALL_CMOD=/usr/local/lib/lua/5.1
------------------------------------------------------------------------------
+```
 
-.Compile the module
------------------------------------------------------------------------------
+Compile the module
+```
 make
------------------------------------------------------------------------------
+```
 
-.Install the module
------------------------------------------------------------------------------
+Install the module
+```
 sudo make install
------------------------------------------------------------------------------
+```
 
-
-=== Install using lua-rocks
-
------------------------------------------------------------------------------
+### Install using lua-rocks
+```
 curl -O "https://github.com/morfoh/lua-sysfs/raw/master/lua-sysfs-scm-0.rockspec"
------------------------------------------------------------------------------
------------------------------------------------------------------------------
 luarocks install lua-sysfs-scm-0.rockspec
------------------------------------------------------------------------------
+```
 
+## Development
 
-Development
------------
+### Re-generating the bindings
 
-=== Re-generating the bindings
+By default CMake will use the pre-generated bindings that are include in the project.
 
-By default CMake will use the pre-generated bindings that are include in the
-project.
-
-To be able to re-generate the bindings, you will need to install
-https://github.com/Neopallium/LuaNativeObjects[LuaNativeObjects] and set the
-CMake variable `USE_PRE_GENERATED_BINDINGS` to `FALSE`.
-
------------------------------------------------------------------------------
+To be able to re-generate the bindings, you will need to install *LuaNativeObjects* and set the CMake variable `USE_PRE_GENERATED_BINDINGS` to `FALSE`.
+```
 cmake ../ -DUSE_PRE_GENERATED_BINDINGS=FALSE
------------------------------------------------------------------------------
+```
 
 Mandantory for re-generating Lua bindings from `*.nobj.lua` files:
 
-* https://github.com/Neopallium/LuaNativeObjects[LuaNativeObjects], this is the
-  bindings generator used to convert the `*.nobj.lua` files into a native Lua
-  module.
+* [LuaNativeObjects](https://github.com/Neopallium/LuaNativeObjects), this is the bindings generator used to convert the `*.nobj.lua` files into a native Lua  module.
 
 Optional for re-generating documentation
 
-* https://github.com/keplerproject/luadoc[luadoc]
+* [luadoc](https://github.com/keplerproject/luadoc)
 
-To not re-generate documentation by luadocs when re-generating the bindings
-you have to to set the CMake variable `GENERATE_LUADOCS` to `FALSE`.
------------------------------------------------------------------------------
+To not re-generate documentation by luadocs when re-generating the bindings you have to to set the CMake variable `GENERATE_LUADOCS` to `FALSE`.
+```
 cmake ../ -DUSE_PRE_GENERATED_BINDINGS=FALSE -DGENERATE_LUADOCS=FALSE
------------------------------------------------------------------------------
+```
