@@ -16,8 +16,8 @@ set(COMMON_LDFLAGS)
 set(COMMON_LIBS)
 
 ## Lua 5.1.x
-include(FindLua51)
-if(NOT ${LUA51_FOUND})
+include(FindLua)
+if(NOT ${LUA_FOUND})
     message(FATAL_ERROR "The FindLua51 module could not find lua :-(")
 endif()
 set(COMMON_LIBS "${COMMON_LIBS};${LUA_LIBRARIES}")
